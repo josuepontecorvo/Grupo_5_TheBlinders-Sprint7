@@ -169,9 +169,20 @@ main {
         margin-bottom: 20px;
     }
 
+    main form .user-image small {
+        display: block;
+        visibility: hidden;
+        color: #e74c3c;
+    }
+
     main form .user-image label:hover {
         color: orangered;
         cursor: pointer;
+    }
+
+    main form .form-control {
+        padding-bottom: 10px;
+        position: relative;
     }
 
     main form .fill-form input {
@@ -187,7 +198,7 @@ main {
         box-shadow: 0px 0px 10px rgb(48, 190, 233);
     }
 
-    main form div {
+    main form .user-image {
         margin: 10px;
     }
 
@@ -197,10 +208,41 @@ main {
         font-style: italic;
     }
 
-    main form div span {
+    main form .form-control i {
+        position: absolute;
+        top: 36.7px;
+        right: 10px;
+        transform: translateY(-50%);
+        visibility: hidden;
+    }
+
+    main form .form-control.success input {
+        border-color: #2ecc71;
+    }
+    
+    main form .form-control.error input {
+        border-color: #e74c3c;
+    }
+
+    main form .form-control.success i.fa-circle-check {
+        color: #2ecc71;
+        visibility: visible;
+    }
+    
+    main form .form-control.error i.fa-exclamation-circle {
+       color: #e74c3c;
+       visibility: visible;
+    }
+
+    main form div small {
         margin: 5px;
-        display: block;
-        color:red;
+        display: absolute;
+        visibility: hidden;
+    }
+
+    main form .form-control.error small {
+        visibility: visible;
+        color: #e74c3c;
     }
 
     main form div .register-term {
@@ -231,15 +273,7 @@ main {
         transition: all 0.5s;
     }
 
-    main form .fill-form input:focus:invalid ~ .feedback::after {
-        color: red;
-        content: "⛔-Campo Invalido";
-    }
-
-    main form .fill-form input:focus:valid ~ .feedback::after {
-        color: green;
-        content: "✅";
-    }
+    
 
 /*FOOTER*/
 
@@ -458,7 +492,7 @@ footer {
         display: flex;
         flex-direction: column;
         flex-wrap:wrap;
-        height: 650px;
+        height: 700px;
         justify-content: space-between;
     }
 
