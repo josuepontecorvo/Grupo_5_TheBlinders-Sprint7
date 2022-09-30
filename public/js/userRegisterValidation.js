@@ -128,7 +128,7 @@ window.onload = function () {
 
     function imageValidation () {
         imageValue.innerText = '';
-        let allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+        let allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
         if (!allowedExtensions.exec(image.value)) {
            errors.image = 'Los tipos de archivos aceptados son: .jpg, .jpeg y .png'; 
         } else {

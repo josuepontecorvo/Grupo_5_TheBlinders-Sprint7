@@ -156,7 +156,9 @@ main {
     }
 
     main form .user-image {
-        text-align: center;;
+        text-align: center;
+        margin: 10px;
+        position: relative;
     }
 
     main form .user-image i {
@@ -174,10 +176,12 @@ main {
         display: block;
     }
 
-    main form .user-image small {
+    main form div.user-image small {
         display: block;
+        text-align: center;
         visibility: hidden;
         color: #e74c3c;
+        position: static;
     }
 
     main form .user-image label:hover {
@@ -186,7 +190,7 @@ main {
     }
 
     main form .form-control {
-        padding-bottom: 10px;
+        padding-bottom: 25px;
         position: relative;
     }
 
@@ -201,10 +205,6 @@ main {
     main form input:focus {
         color: green;
         box-shadow: 0px 0px 10px rgb(48, 190, 233);
-    }
-
-    main form .user-image {
-        margin: 10px;
     }
 
     main form div label {
@@ -241,7 +241,8 @@ main {
 
     main form div small {
         margin: 5px;
-        display: absolute;
+        position: absolute;
+        display: block;
         visibility: hidden;
     }
 

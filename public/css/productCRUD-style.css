@@ -184,6 +184,12 @@ main {
         margin-left: 10px;
     }
 
+    main form div {
+        padding-bottom: 15px;
+        position: relative;
+        margin: 10px;
+    }
+
     main form label.radio-label {
         margin-right: 10px;
     }
@@ -219,6 +225,14 @@ main {
         color: green;
         box-shadow: 0px 0px 10px rgb(48, 190, 233);
     }
+    
+    main form .form-control i {
+        position: absolute;
+        top: 36.5px;
+        right: 30px;
+        transform: translateY(-50%);
+        visibility: hidden;
+    }
 
     main form .form-control.success select {
         border-color: #2ecc71;
@@ -228,20 +242,32 @@ main {
         border-color: #e74c3c;
     }
 
-    main form div {
-        margin: 10px;
+    main form .form-control.success i.fa-circle-check {
+        color: #2ecc71;
+        visibility: visible;
+    }
+    
+    main form .form-control.error i.fa-exclamation-circle {
+       color: #e74c3c;
+       visibility: visible;
+    }
+
+    main form .form-control small {
+        margin: 5px;
+        display: block;
+        position: absolute;
+        visibility: hidden;
+    }
+
+    main form .form-control.error small {
+        visibility: visible;
+        color: #e74c3c;
     }
 
     main form div label.input-label {
         display: block;
         margin-bottom: 5px;
         font-style: italic;
-    }
-
-    main form div span {
-        margin: 5px;
-        display: block;
-        color:red;
     }
 
     main form .submit-form {

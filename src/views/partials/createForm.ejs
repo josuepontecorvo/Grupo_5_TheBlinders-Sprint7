@@ -13,9 +13,11 @@
             <% }); %> 
             <% } %> 
         </select>
-        <span class="feedback">
+        <small class="feedback">
             <%= locals.errors && errors.categoryId ? errors.categoryId.msg : null %> 
-        </span>
+        </small>
+        <i class="fa-solid fa-circle-check"></i>
+        <i class="fas fa-exclamation-circle"></i>
     </div>
     <diV class="form-control">
         <label class="input-label" for="type">Tipo:</label>
@@ -31,37 +33,47 @@
             <% }); %> 
             <% } %> 
         </select>
-        <span class="feedback">
+        <small class="feedback">
             <%= locals.errors && errors.typeId ? errors.typeId.msg : null %> 
-        </span>
+        </small>
+        <i class="fa-solid fa-circle-check"></i>
+        <i class="fas fa-exclamation-circle"></i>
     </diV>
     <diV class="form-control">
         <label class="input-label" for="description">Descripción:</label>
         <input type="text" name="description" id="description" required value="<%= locals.oldData && oldData.description %>">
-        <span class="feedback">
+        <small class="feedback">
             <%= locals.errors && errors.description ? errors.description.msg : null %> 
-        </span>
+        </small>
+        <i class="fa-solid fa-circle-check"></i>
+        <i class="fas fa-exclamation-circle"></i>
     </diV>
     <div class="form-control">
         <label class="input-label" for="product-image">Carga la foto del producto</label>
         <input class="file" type="file" name="image" id="product-image"  accept=".jpg, .png" multiple>
-        <span class="feedback">
+        <small class="feedback">
             <%= locals.errors && errors.image ? errors.image.msg : null %> 
-        </span>
+        </small>
+        <i class="fa-solid fa-circle-check"></i>
+        <i class="fas fa-exclamation-circle"></i>
     </div>
     <div class="form-control">
         <label class="input-label" for="price">Precio:</label>
         <input type="number" name="price" id="price" required value="<%= locals.oldData && oldData.price %>" />
-        <span class="feedback">
+        <small class="feedback">
             <%= locals.errors && errors.price ? errors.price.msg : null %> 
-        </span>
+        </small>
+        <i class="fa-solid fa-circle-check"></i>
+        <i class="fas fa-exclamation-circle"></i>
     </div>
     <div class="form-control">
         <label class="input-label" for="discount">Descuento:</label>
         <input type="number" name="discount" id="discount" placeholder="0" value="<%= locals.oldData && oldData.discount %>"/>
-        <span class="feedback">
+        <small class="feedback">
             <%= locals.errors && errors.discount ? errors.discount.msg : null %> 
-        </span>
+        </small>
+        <i class="fa-solid fa-circle-check"></i>
+        <i class="fas fa-exclamation-circle"></i>
     </div>
     <diV class="form-control">
         <label class="input-label" for="brand">Marca:</label>
@@ -77,16 +89,20 @@
             <% }); %> 
             <% } %> 
         </select>
-        <span class="feedback">
+        <small class="feedback">
             <%= locals.errors && errors.brandId ? errors.brandId.msg : null %>
-        </span>
+        </small>
+        <i class="fa-solid fa-circle-check"></i>
+        <i class="fas fa-exclamation-circle"></i>
     </diV>
     <diV class="form-control">
         <label class="input-label" for="model">Modelo:</label>
         <input type="text" name="model" id="model" value="<%= locals.oldData && oldData.model %>">
-        <span class="feedback">
+        <small class="feedback">
             <%= locals.errors && errors.model ? errors.model.msg : null %> 
-        </span>
+        </small>
+        <i class="fa-solid fa-circle-check"></i>
+        <i class="fas fa-exclamation-circle"></i>
     </diV>
     <diV class="form-control">
         <label class="input-label" for="size">Talle:</label>
@@ -118,7 +134,9 @@
             <% }); %> 
             <% } %> 
         </select>
-        <span class="feedback"></span>
+        <small class="feedback"></small>
+        <i class="fa-solid fa-circle-check"></i>
+        <i class="fas fa-exclamation-circle"></i>
     </diV>
     <div class="form-control">
         <label class="input-label" for="rolled">Rodado:</label>
