@@ -220,6 +220,14 @@ main {
         box-shadow: 0px 0px 10px rgb(48, 190, 233);
     }
 
+    main form .form-control.success select {
+        border-color: #2ecc71;
+    }
+    
+    main form .form-control.error select {
+        border-color: #e74c3c;
+    }
+
     main form div {
         margin: 10px;
     }
@@ -252,15 +260,6 @@ main {
         transition: all 0.5s;
     }
 
-    main form input:focus:invalid ~ .feedback::after {
-        color: red;
-        content: "⛔-Campo Invalido";
-    }
-
-    main form input:focus:valid ~ .feedback::after {
-        color: green;
-        content: "✅";
-    }
 
 /*FOOTER*/
 

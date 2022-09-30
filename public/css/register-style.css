@@ -169,6 +169,11 @@ main {
         margin-bottom: 20px;
     }
 
+    main form .user-image .image-value {
+        text-align: center;
+        display: block;
+    }
+
     main form .user-image small {
         display: block;
         visibility: hidden;

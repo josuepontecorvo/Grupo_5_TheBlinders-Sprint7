@@ -162,7 +162,46 @@ div.burger-menu .burger-options li {
     }
     
     .login-form div {
-        padding-bottom: 10px;
+        padding-bottom: 25px;
+        position: relative;
+    }
+
+    main form div i {
+        position: absolute;
+        top: 39.6px;
+        right: 10px;
+        transform: translateY(-50%);
+        visibility: hidden;
+    }
+
+    main form div.success input {
+        border-color: #2ecc71;
+    }
+    
+    main form div.error input {
+        border-color: #e74c3c;
+    }
+
+    main form div.success i.fa-circle-check {
+        color: #2ecc71;
+        visibility: visible;
+    }
+    
+    main form div.error i.fa-exclamation-circle {
+       color: #e74c3c;
+       visibility: visible;
+    }
+
+    main form div small {
+        margin: 5px;
+        display: block;
+        position: absolute;
+        visibility: hidden;
+    }
+
+    main form div.error small {
+        visibility: visible;
+        color: #e74c3c;
     }
     
     .login-form div input {
@@ -170,6 +209,10 @@ div.burger-menu .burger-options li {
         margin-top: 5px;
         font-size: 13px;
         padding: 5px;
+    }
+
+    .login-form .remember-user {
+        margin-top: 20px;
     }
 
     .login-form div label.rememberUser input {
@@ -199,20 +242,6 @@ div.burger-menu .burger-options li {
         text-decoration: none;
     }
     
-    main form.login-form input:focus:invalid ~ .feedback::after {
-        display: block;
-        margin-top: 10px;
-        color: red;
-        content: "⛔-Campo Invalido";
-        font-weight: bold;
-    }
-    
-    main form.login-form input:focus:valid ~ .feedback::after {
-        color: green;
-        content: "✅";
-        display: block;
-        margin-top: 10px;
-    }
 
 /*FOOTER*/
 

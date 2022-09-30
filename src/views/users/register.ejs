@@ -14,6 +14,7 @@
                 <div class="user-image">
                     <i class="fa-solid fa-circle-user"></i>
                     <label for="user-image">Carga tú foto de perfil</label>
+                    <span class="image-value"></span>
                     <input type="file" name="image" id="user-image" style="visibility: hidden;" accept=".jpg, .png, .jpeg" />
                     <small class="feedback"> <%= locals.errors && errors.image ? errors.image.msg : null %>  </small>
                 </div>

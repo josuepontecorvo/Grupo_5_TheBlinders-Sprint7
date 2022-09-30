@@ -14,18 +14,22 @@
                 <div>
                     <label for="username">Usuario/mail:</label>
                     <input type="text" name="username" placeholder="johndow@mail.com" id="username" minLength="4" required value="<%= locals.oldData && oldData.username %>">
-                    <span class="feedback">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
+                    <small class="feedback">
                         <%= locals.errors && errors.username ? errors.username.msg : null %> 
-                    </span>
+                    </small>
                 </div>
                 <div>
                     <label for="password">Contraseña:</label>
                     <input type="password" name="password" id="password" minLength="8" required>
-                    <span class="feedback">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
+                    <small class="feedback">
                         <%= locals.errors && errors.password ? errors.password.msg : null %>
-                    </span> 
+                    </small> 
                 </div>
-                <div>
+                <div class="remember-user">
                     <label for="rememberUser" class="rememberUser">
                         <input type="checkbox" name="rememberUser" id="rememberUser">
                         Recordarme
@@ -38,5 +42,6 @@
         </section>
     </main>
     <%- include('../partials/footer.ejs') %> 
+    <script src="/js/userLoginValidation.js"></script>
 </body>
 </html>

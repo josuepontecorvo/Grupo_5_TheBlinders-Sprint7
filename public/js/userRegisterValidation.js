@@ -1,5 +1,6 @@
 window.onload = function () {
     // Catch the inputs from the DOM
+    const imageValue = document.querySelector('.image-value')
     const image = document.querySelector('#user-image');
     const name = document.querySelector('#name');
     const lastName = document.querySelector('#last-name');
@@ -126,16 +127,18 @@ window.onload = function () {
     }
 
     function imageValidation () {
+        imageValue.innerText = '';
         let allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
         if (!allowedExtensions.exec(image.value)) {
            errors.image = 'Los tipos de archivos aceptados son: .jpg, .jpeg y .png'; 
         } else {
             delete errors.image;
+            let name = image.value.split('\\')
+            imageValue.innerText = name[name.length-1];
         }
 
         let formControl = image.parentElement
         let small = formControl.querySelector('small')
-
         if (errors.image) {
             small.innerText = errors.image;
             small.style.visibility = "visible";
@@ -147,7 +150,6 @@ window.onload = function () {
     }
 
     function birthdateValidation () {
-        console.log(birthdate.value);
         function calculateAge (birthdateInput) {
             birthdateInput = birthdateInput.value.split('-').join('/'); 
             let today = new Date();
@@ -198,7 +200,7 @@ window.onload = function () {
 
     // Validations when the users left an input
 
-    image.addEventListener('blur', imageValidation);
+    image.addEventListener('change', imageValidation);
     name.addEventListener('blur', nameValidation);
     lastName.addEventListener('blur', lastNameValidation);
     birthdate.addEventListener('blur', birthdateValidation);
