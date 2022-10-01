@@ -8,9 +8,11 @@ const userLoggedMiddleware = require('./middleware/userLoggedMiddleware');
 const mainRouter = require('./routes/mainRouter');
 const usersRouter = require('./routes/usersRouter');
 const productsRouter = require('./routes/productsRouter');
+// API routers
+const APIUsersRouter = require('./routes/API/usersRouter');
+const APIProductsRouter = require('./routes/API/productsRouter');
 
-
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(express.static(path.resolve(__dirname, '../public')));
 app.set('view engine', 'ejs');
@@ -25,8 +27,11 @@ app.use(userLoggedMiddleware);
 app.use('/', mainRouter);
 app.use('/productos', productsRouter);
 app.use('/usuarios', usersRouter);
+// API routes
+app.use('/api/productos', APIProductsRouter);
+app.use('/api/usuarios', APIUsersRouter);
 
 
-app.listen(process.env.PORT || port, () => console.log(`Listening on port ${port}!`));
+app.listen( port, () => console.log(`Listening on port ${port}!`));
 
 
