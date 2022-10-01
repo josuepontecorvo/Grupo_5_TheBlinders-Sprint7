@@ -272,40 +272,46 @@ controlador = {
     },
 
     delete: async (req,res) => {
+        try {
+            
+            let idToDelete = req.params.id;
+            let data = await User.findByPk(idToDelete);
+            const user = await data?.toJSON();
+                delete user?.password;
+                delete user?.roleId;
+                delete user?.RoleId;
 
-        let idToDelete = req.params.id;
-        let data = await User.findByPk(idToDelete);
-        const user = await data?.toJSON();
-            delete user?.password;
-            delete user?.roleId;
-            delete user?.RoleId;
+            // let pathToImage = path.join(__dirname, '../../public/images/users/'+ user.image);
+            // fs.unlinkSync( pathToImage );
+            if (user) {
+                await User.destroy({where:{"id": idToDelete}});
 
-        // let pathToImage = path.join(__dirname, '../../public/images/users/'+ user.image);
-        // fs.unlinkSync( pathToImage );
-        if (user) {
-            await User.destroy({where:{"id": idToDelete}});
-
-            let respuesta = {
-                meta : {
-                    status : 200,
-                    url : `/api/usuarios/eliminar/${user.id}`,
-                },
-                data : user
-            } 
-            res.status(200).json(respuesta);
+                let respuesta = {
+                    meta : {
+                        status : 200,
+                        url : `/api/usuarios/eliminar/${user.id}`,
+                    },
+                    data : user
+                } 
+                res.status(200).json(respuesta);
 
 
-        } else {
-            let respuesta = {
-                meta : {
-                    status : 404,
-                    url : `/api/usuarios/eliminar/${req.params.id}`,
-                },
-                data : 'Usuario no encontrado'
-            } 
-            res.status(404).json(respuesta);
+            } else {
+                let respuesta = {
+                    meta : {
+                        status : 404,
+                        url : `/api/usuarios/eliminar/${req.params.id}`,
+                    },
+                    data : 'Usuario no encontrado'
+                } 
+                res.status(404).json(respuesta);
+            }
+
+        } catch (error) {
+
+            res.json(error.message)
+
         }
-        
 
     },
 

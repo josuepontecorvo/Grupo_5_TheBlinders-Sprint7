@@ -1,5 +1,6 @@
 const db = require('../../dataBase/models');
-const  {validationResult} = require('express-validator');
+const { Op } = require("sequelize");
+const { validationResult } = require('express-validator');
 const path = require('path');
 const fs = require('fs');
 
@@ -7,24 +8,75 @@ controller = {
 
     products: async (req,res) => {
         try {
-            const products =  await db.Product.findAll({
-                include: [db.Image]
+            const data = await db.Product.findAll({
+                include: [{model: db.Image, attributes: ['fileName'] }, db.Category, db.Brand]
             });
-            //res.json(products)
-            res.render('products/products', {products,toThousand})
+            let products = [...data];
+            let totalCategory =  await db.Product.findAndCountAll({
+                attributes: ['Category.name'],
+                include: [db.Category],
+                group : "Category.name"
+            })
+            let totalByCategory = {
+                accesorios : totalCategory["count"][0]["count"],
+                bicicletas : totalCategory["count"][1]["count"],
+            }
+            products = products.map(product => {
+                return {
+                    id: product.id,
+                    brand: product.Brand.name,
+                    model: product.model,
+                    description: product.description,
+                    category: product.Category.name,
+                    images: product.Images,
+                    detail: `/api/productos/${product.id}`
+                };
+            })  
+            let respuesta = {
+                meta : {
+                    status : 200,
+                    total : products.length,
+                    totalByCategory ,
+                    url : '/api/productos'
+                },
+                data : products
+            } 
+
+            res.status(200).json(respuesta);
+
         } catch (error) {
-            res.json({error: error.message});
+            res.json(error.message);
         }
-        
     },
 
     detail: async (req,res) => {
         try {
             const id = +req.params.id;
-            const product = await db.Product.findByPk(id, {
-                include: [db.Brake,db.Brand,db.Image,db.WheelSize,db.Frame,db.Shift,db.Suspension]
+            const data = await db.Product.findByPk(id, {
+                include: [{model: db.Brake, attributes: ['type'] }, {model: db.Brand, attributes: ['name'] }, {model: db.Image, attributes: ['fileName'] }, {model: db.WheelSize, attributes: ['number'] }, {model: db.Frame, attributes: ['name'] }, {model: db.Shift, attributes: ['number'] }, {model: db.Suspension, attributes: ['type'] }],
+                attributes: ['description', 'model', 'price', 'discount'],
             });    
-            res.render('products/productDetail', {product,toThousand})
+            const product = await data?.toJSON();
+
+            if (product) {
+                let respuesta = {
+                    meta : {
+                        status : 200,
+                        url : `/api/productos/${id}`,
+                    },
+                    data : product
+                } 
+                res.status(200).json(respuesta);
+            } else {
+                let respuesta = {
+                    meta : {
+                        status : 404,
+                        url : `/api/productos/${req.params.id}`,
+                    },
+                    data : 'Producto no encontrado'
+                } 
+                res.status(404).json(respuesta);
+            }
         } catch (error) {
             res.json({error: error.message});
         }
@@ -35,48 +87,72 @@ controller = {
         try {
             let product = req.body;
 
+            if (req.body.id) {
+                let respuesta = {
+                    meta : {
+                        status : 400,
+                        url : `/api/productos/crear`,
+                    },
+                    data : 'No puede enviar el id en el body'
+                } 
+                return res.status(400).json(respuesta);
+            }
+
             // Validaciones de productos
 
                 const errors = validationResult(req);
             if (errors.isEmpty()) {
                 let imagenes= []
-                const productId = await db.Product.create(product);
-                for(let i = 0 ; i<req.files.length;i++) {
-                    imagenes.push({
-                        fileName: req.files[i].filename,
-                        productId: productId.id
+                const newProduct = await db.Product.create(product);
+                if (req.files) {
+                    for(let i = 0 ; i<req.files.length;i++) {
+                        imagenes.push({
+                            fileName: req.files[i].filename,
+                            productId: newProduct.id
+                        })
+                    }
+                }
+
+
+                if (imagenes.length > 0) {
+
+                    await db.Image.bulkCreate(imagenes)
+
+                } else {
+
+                    await db.Image.create({
+                        fileName: 'default-product-image.png',
+                        productId: newProduct.id
                     })
                 }
-                if (imagenes.length > 0) {
-                    await db.Image.bulkCreate(imagenes)
-                    res.redirect('/productos')
-                } else {
-                    await db.Image.create([{
-                        fileName: 'default-product-image.png',
-                        productId: product.id,
-                    }])
-                    res.redirect('/productos')
-                }
+
+
+
+                let respuesta = {
+                    meta : {
+                        status : 201,
+                        url : `/api/productos/${newProduct.id}`,
+                    },
+                    data : newProduct
+                } 
+                res.status(201).json(respuesta);
                 
                 
             } else {
-                if (req.files) {
-                    let {files} = req;
-                for (let i = 0 ; i< files.length; i++) {
-                    fs.unlinkSync(path.resolve(__dirname, '../../public/images/'+files[i].filename))
-                }
-                };
-                const brakes = await db.Brake.findAll();
-                const categories = await db.Category.findAll();
-                const brands = await db.Brand.findAll();
-                const colors = await db.Color.findAll();
-                const frames = await db.Frame.findAll();
-                const types = await db.Type.findAll();
-                const wheelSizes = await db.WheelSize.findAll();
-                const sizes = await db.Size.findAll();
-                const shifts = await db.Shift.findAll();
-                const suspentions = await db.Suspension.findAll();
-                res.render('products/productCreate',{errors: errors.mapped(), oldData: req.body,brakes,categories,brands,colors,frames,types,wheelSizes,sizes,shifts,suspentions});
+                // if (req.files) {
+                //     let {files} = req;
+                // for (let i = 0 ; i< files.length; i++) {
+                //     fs.unlinkSync(path.resolve(__dirname, '../../public/images/'+files[i].filename))
+                // }
+                // };
+                let respuesta = {
+                    meta : {
+                        status : 400,
+                        url : `/api/productos/crear`,
+                    },
+                    data : errors.mapped()
+                } 
+                res.status(400).json(respuesta);
             }
         } catch (error) {
             res.json({error: error.message});
@@ -84,61 +160,61 @@ controller = {
         
     },
 
-    delete: async (req,res) => {
-        try {
-            const { id } = req.params;
-            let imagenes = await db.Image.findAll({
-                where: {productId: id}
-            });
-            if (imagenes) {
-                let files = imagenes.filter(image => image.fileName != 'default-product-image.png');
-            for (let i = 0 ; i< files.length; i++) {
-                fs.unlinkSync(path.resolve(__dirname, '../../public/images/'+files[i].fileName))
-            }
-            };
-            await db.Image.destroy({
-                where: {
-                    productId: id
-                }
-            }, {
-                force: true
-            });
-            await db.Product.destroy({
-                where: {
-                    id
-                }
-            }, {
-                force: true
-            });
-            res.redirect("/productos")
-        } catch (error) {
-            res.json(error.message)
-        }
-    },
-
     update: async (req,res) => {
         try {
             // Validaciones de productos
 
             let idToUpdate = req.params.id;
+            const productToUpdate = await db.Product.findByPk(idToUpdate);  
+
+            if (!productToUpdate) {
+                let respuesta = {
+                    meta : {
+                        status : 404,
+                        url : `/api/productos/editar/${req.params.id}`,
+                    },
+                    data : 'Producto no encontrado'
+                } 
+                return res.status(404).json(respuesta);
+    
+    
+            } else if (req.body.id) {
+                let respuesta = {
+                    meta : {
+                        status : 400,
+                        url : `/api/producto/editar/${req.params.id}`,
+                    },
+                    data : 'No puede enviar el id en el body'
+                } 
+                return res.status(400).json(respuesta);
+            }
+
+
             const errors = validationResult(req);
+            // There are not validations errors
             if (errors.isEmpty()) {
 
                 let dataUpdate = req.body;
                 let imagenes= []
-                const product = await db.Product.update({
+                await db.Product.update({
                     ...dataUpdate,
                 }, {
                     where: {
                         id: idToUpdate
                     }
                 });
-                for(let i = 0 ; i<req.files.length;i++) {
-                    imagenes.push({
-                        fileName: req.files[i].filename,
-                        productId: idToUpdate
-                    })
+
+                if (req.files) {
+
+                    for(let i = 0 ; i<req.files.length;i++) {
+                        imagenes.push({
+                            fileName: req.files[i].filename,
+                            productId: idToUpdate
+                        })
+                    }
+
                 }
+
                 if (imagenes.length > 0) {
                     const oldImages = await db.Image.findAll({where: {productId: idToUpdate}})
                     oldImages.forEach( image => {
@@ -147,7 +223,18 @@ controller = {
                     await db.Image.destroy({where: {productId: idToUpdate}})
                     await db.Image.bulkCreate(imagenes)
                 }
-                res.redirect('/productos')
+
+                const product = await db.Product.findByPk(idToUpdate);  
+
+                let respuesta = {
+                    meta : {
+                        status : 200,
+                        url : `/api/productos/editar/${idToUpdate}`,
+                    },
+                    data : product
+                } 
+                res.status(200).json(respuesta);
+
             } else {
                 if (req.files) {
                     let {files} = req;
@@ -155,37 +242,156 @@ controller = {
                         fs.unlinkSync(path.resolve(__dirname, '../../public/images/'+files[i].filename))
                     }
                 };
-                const brakes = await db.Brake.findAll();
-                const categories = await db.Category.findAll();
-                const brands = await db.Brand.findAll();
-                const colors = await db.Color.findAll();
-                const frames = await db.Frame.findAll();
-                const types = await db.Type.findAll();
-                const wheelSizes = await db.WheelSize.findAll();
-                const sizes = await db.Size.findAll();
-                const shifts = await db.Shift.findAll();
-                const suspentions = await db.Suspension.findAll();
-                const product = await db.Product.findByPk(idToUpdate,{
-                    include: [db.Brake,db.Brand,db.Image,db.WheelSize,db.Frame,db.Shift,db.Suspension,db.Category,db.Color,db.Size,db.Type]
-                });
-                res.render('products/productEdit',{errors: errors.mapped(), oldData: req.body, idToUpdate,product, idToUpdate,brakes,categories,brands,colors,frames,types,wheelSizes,sizes,shifts,suspentions });
+                let respuesta = {
+                    meta : {
+                        status : 400,
+                        url : `/api/productos/editar/${idToUpdate}`,
+                    },
+                    data : errors.mapped()
+                } 
+                res.status(400).json(respuesta);
             }
+
         } catch (error) {
             res.json({error: error.message});
+        }
+    },
+
+    delete: async (req,res) => {
+        try {
+
+            const { id } = req.params;
+            let data = await db.Product.findByPk(id);
+            const product = await data?.toJSON();
+
+            if (product) {
+
+                let imagenes = await db.Image.findAll({
+                    where: {productId: id}
+                });
+                // if (imagenes) {
+                //     let files = imagenes.filter(image => image.fileName != 'default-product-image.png');
+                // for (let i = 0 ; i< files.length; i++) {
+                //     fs.unlinkSync(path.resolve(__dirname, '../../public/images/'+files[i].fileName))
+                // }
+                // };
+                await db.Image.destroy({
+                    where: {
+                        productId: id
+                    }
+                }, {
+                    force: true
+                });
+    
+                await db.Product.destroy({
+                    where: {
+                        id
+                    }
+                }, {
+                    force: true
+                });
+
+                let respuesta = {
+                    meta : {
+                        status : 200,
+                        url : `/api/productos/eliminar/${id}`,
+                    },
+                    data : product
+                } 
+                res.status(200).json(respuesta);
+
+            } else {
+                let respuesta = {
+                    meta : {
+                        status : 404,
+                        url : `/api/productos/eliminar/${req.params.id}`,
+                    },
+                    data : 'Producto no encontrado'
+                } 
+                res.status(404).json(respuesta);
+            }
+
+
+
+        } catch (error) {
+
+            res.json(error.message)
+
         }
     },
     
     search: async (req,res) => {
         try {
-            let busqueda = req.query.search;
-            const products = await db.Product.findAll({
-                include: [db.Brake,db.Brand,db.Image,db.Frame,db.Shift,db.Category,db.Type]
+            let busqueda = req.query?.search;
+
+            if (!busqueda) {
+                let respuesta = {
+                    meta : {
+                        status : 404,
+                        url : `/api/productos/buscar`,
+                    },
+                    data : 'Debes ingresar una condición de busqueda.'
+                } 
+                return res.status(404).json(respuesta);
+            }
+
+            const data = await db.Product.findAll({
+                include: [{model: db.Image, attributes: ['fileName'] }, db.Category, db.Brand],
+                where: { description: {[Op.like] : '%'+busqueda+'%' }}
+            });
+            let products = [...data];
+
+            // If there is no coincidence 
+
+            if (!products) {
+                let respuesta = {
+                    meta : {
+                        status : 404,
+                        url : `/api/productos/buscar`,
+                    },
+                    data : 'Producto no encontrado'
+                } 
+                return res.status(404).json(respuesta);
+            }
+
+            let totalCategory =  await db.Product.findAndCountAll({
+                attributes: ['Category.name'],
+                where: { description: {[Op.like] : '%'+busqueda+'%' }},
+                include: [db.Category],
+                group : "Category.name"
             })
-        res.render('products/products', {products,toThousand,busqueda})
+
+
+            let totalByCategory = {
+                accesorios : totalCategory["rows"][0]["Category"]["name"] == "Accesorios" ? totalCategory["count"]?.[0]?.["count"] : undefined,
+                bicicletas : totalCategory["rows"][0]["Category"]["name"] == "Bicicletas" ? totalCategory["count"]?.[0]?.["count"] : totalCategory["count"]?.[1]?.["count"]
+            }
+            products = products.map(product => {
+                return {
+                    id: product.id,
+                    brand: product.Brand.name,
+                    model: product.model,
+                    description: product.description,
+                    category: product.Category.name,
+                    images: product.Images,
+                    detail: `/api/productos/${product.id}`
+                };
+            })  
+            let respuesta = {
+                meta : {
+                    status : 200,
+                    total : products.length,
+                    totalByCategory ,
+                    url : '/api/productos/buscar'
+                },
+                data : products
+            } 
+
+            res.status(200).json(respuesta);
+
         } catch (error) {
-            res.json({error: error.message});
+            res.json(error.message);
         }
-        
     },
 
 };

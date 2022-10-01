@@ -70,10 +70,10 @@ controller = {
                     await db.Image.bulkCreate(imagenes)
                     res.redirect('/productos')
                 } else {
-                    await db.Image.create([{
+                    await db.Image.create({
                         fileName: 'default-product-image.png',
-                        productId: product.id,
-                    }])
+                        productId: productId.id,
+                    })
                     res.redirect('/productos')
                 }
                 
