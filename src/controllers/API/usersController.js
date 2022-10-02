@@ -7,9 +7,53 @@ const { User, Role } = require('../../dataBase/models');
 
 controlador = {
     list: async (req,res) =>{ 
+
         try {
-            let data = await User.findAll();
-            let users = [...data];
+            let data; 
+            // Page number < 1
+            if (req.query.page <= 0) {
+
+                let respuesta = {
+                    meta : {
+                        status : 400,
+                        url : `/api/usuarios${req.url}`,
+                    },
+                    data : 'El número de página debe ser mayor o igual a 1'
+                } 
+                return res.status(400).json(respuesta);
+
+            } else if (req.query.page > 0) {
+
+                data =  await User.findAndCountAll({
+                    attributes: ['id','firstName','lastName','email','image'],
+                    limit: 10,
+                    offset: (req.query.page - 1) * 10,
+                })
+
+            } else {
+
+                data =  await User.findAndCountAll({
+                    attributes: ['id','firstName','Lastname','email','image'],
+                })
+
+            }
+
+            let users = [...data.rows];
+            let total = data.count;
+            // The page number require is greater than the pages available. 
+            if (req.query.page && req.query.page > Math.ceil(total/10) ) {
+
+                let respuesta = {
+                    meta : {
+                        status : 400,
+                        url : `/api/usuarios${req.url}`,
+                    },
+                    data : 'El número de páginas disponibles es: ' + Math.ceil(total/10)
+                } 
+                return res.status(400).json(respuesta);
+
+            };
+
             users = users.map(user => {
                 return {
                     id: user.id,
@@ -17,12 +61,16 @@ controlador = {
                     email: user.email,
                     detail: `/api/usuarios/${user.id}`,
                 };
-            })  
+            });
+            
+            
             let respuesta = {
                 meta : {
                     status : 200,
                     total : users.length,
-                    url : '/api/usuarios'
+                    url : `/api/usuarios${req.url}`,
+                    next: (req.query.page && req.query.page * 10 < total) ? `/api/usuarios/?page=${+req.query.page + 1}` : '',
+                    previous: +req.query.page > 1 ? `/api/usuarios/?page=${+req.query.page - 1}` : ''
                 },
                 data : users
             } 
@@ -273,7 +321,7 @@ controlador = {
 
     delete: async (req,res) => {
         try {
-            
+
             let idToDelete = req.params.id;
             let data = await User.findByPk(idToDelete);
             const user = await data?.toJSON();

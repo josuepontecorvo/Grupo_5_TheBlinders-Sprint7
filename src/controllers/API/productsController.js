@@ -3,25 +3,124 @@ const { Op } = require("sequelize");
 const { validationResult } = require('express-validator');
 const path = require('path');
 const fs = require('fs');
+const { brotliDecompress } = require('zlib');
 
 controller = {
 
     products: async (req,res) => {
         try {
-            const data = await db.Product.findAll({
-                include: [{model: db.Image, attributes: ['fileName'] }, db.Category, db.Brand]
-            });
-            let products = [...data];
-            let totalCategory =  await db.Product.findAndCountAll({
-                attributes: ['Category.name'],
-                include: [db.Category],
-                group : "Category.name"
-            })
-            let totalByCategory = {
-                accesorios : totalCategory["count"][0]["count"],
-                bicicletas : totalCategory["count"][1]["count"],
+            let data;
+            let busqueda;
+            // Page number < 1
+            if (req.query.page <= 0) {
+
+                let respuesta = {
+                    meta : {
+                        status : 400,
+                        url : `/api/productos${req.url}`,
+                    },
+                    data : 'El número de página debe ser mayor o igual a 1'
+                } 
+                return res.status(400).json(respuesta);
+
+            };
+            // Search query retrieved but empty
+            if (req.query.search == "") {
+
+                let respuesta = {
+                    meta : {
+                        status : 400,
+                        url : `/api/productos${req.url}`,
+                    },
+                    data : 'Debe ingresar una condición de busqueda'
+                } 
+                return res.status(400).json(respuesta);
+
             }
+
+
+            if (req.query.page > 0 && req.query.search) {
+
+                busqueda = req.query.search.toUpperCase();
+                data =  await db.Product.findAndCountAll({
+                    attributes: ['id','model','description'],
+                    include: [{model: db.Category, attributes: ['name']}, {model: db.Brand, attributes: ['name']}, {model: db.Image, attributes: ['fileName']} ],
+                    where: { description: {[Op.like] : '%'+busqueda+'%' }},
+                    limit: 10,
+                    offset: (req.query.page - 1) * 10,
+                })
+
+            } else if (req.query.page > 0) {
+
+                data =  await db.Product.findAndCountAll({
+                    attributes: ['id','model','description'],
+                    include: [{model: db.Category, attributes: ['name']}, {model: db.Brand, attributes: ['name']}, {model: db.Image, attributes: ['fileName']} ],
+                    limit: 10,
+                    offset: (req.query.page - 1) * 10,
+                })
+
+            } else if (req.query.search) {
+
+                busqueda = req.query.search.toUpperCase();
+                data =  await db.Product.findAndCountAll({
+                    attributes: ['id','model','description'],
+                    include: [{model: db.Category, attributes: ['name']}, {model: db.Brand, attributes: ['name']}, {model: db.Image, attributes: ['fileName']} ],
+                    where: { description: {[Op.like] : '%'+busqueda+'%' }},
+                })
+
+            } else {
+                
+                data =  await db.Product.findAndCountAll({
+                    attributes: ['id','model','description'],
+                    include: [{model: db.Category, attributes: ['name']}, {model: db.Brand, attributes: ['name']}, {model: db.Image, attributes: ['fileName']} ]
+                })
+
+            }
+            
+
+            let products = [...data.rows];
+            let total = data.count;
+            let totalByCategory = {
+                accesorios : 0,
+                bicicletas : 0
+            }
+
+            // The server can not find the requested resource.
+            if ( total == 0 ) {
+
+                let respuesta = {
+                    meta : {
+                        status : 404,
+                        url : `/api/productos${req.url}`,
+                    },
+                    data : 'No se encontraron productos que cumplan con la condición'
+                } 
+                return res.status(404).json(respuesta);
+
+            };
+
+            // The page number require is greater than the pages available. 
+            if (req.query.page && req.query.page > Math.ceil(total/10) ) {
+
+                let respuesta = {
+                    meta : {
+                        status : 400,
+                        url : `/api/productos${req.url}`,
+                    },
+                    data : 'El número de páginas disponibles es: ' + Math.ceil(total/10)
+                } 
+                return res.status(400).json(respuesta);
+
+            };
+
+            // The server find requested resource
             products = products.map(product => {
+                if (product.Category.name == 'Bicicletas') {
+                    ++totalByCategory.bicicletas 
+                } else if (product.Category.name == 'Accesorios') {
+                    ++totalByCategory.accesorios 
+                }
+
                 return {
                     id: product.id,
                     brand: product.Brand.name,
@@ -32,17 +131,20 @@ controller = {
                     detail: `/api/productos/${product.id}`
                 };
             })  
+            
             let respuesta = {
                 meta : {
                     status : 200,
                     total : products.length,
                     totalByCategory ,
-                    url : '/api/productos'
+                    url : `/api/productos${req.url}`,
+                    next: (req.query.page && req.query.page * 10 < total) ? `/api/productos/?page=${+req.query.page + 1}${req.query.search ? '&search='+req.query.search : '' }` : '',
+                    previous: +req.query.page > 1 ? `/api/productos/?page=${+req.query.page - 1}${req.query.search ? '&search='+req.query.search : '' }` : ''
                 },
                 data : products
             } 
 
-            res.status(200).json(respuesta);
+            return res.status(200).json(respuesta);
 
         } catch (error) {
             res.json(error.message);
@@ -317,80 +419,6 @@ controller = {
 
             res.json(error.message)
 
-        }
-    },
-    
-    search: async (req,res) => {
-        try {
-            let busqueda = req.query?.search;
-
-            if (!busqueda) {
-                let respuesta = {
-                    meta : {
-                        status : 404,
-                        url : `/api/productos/buscar`,
-                    },
-                    data : 'Debes ingresar una condición de busqueda.'
-                } 
-                return res.status(404).json(respuesta);
-            }
-
-            const data = await db.Product.findAll({
-                include: [{model: db.Image, attributes: ['fileName'] }, db.Category, db.Brand],
-                where: { description: {[Op.like] : '%'+busqueda+'%' }}
-            });
-            let products = [...data];
-
-            // If there is no coincidence 
-
-            if (!products) {
-                let respuesta = {
-                    meta : {
-                        status : 404,
-                        url : `/api/productos/buscar`,
-                    },
-                    data : 'Producto no encontrado'
-                } 
-                return res.status(404).json(respuesta);
-            }
-
-            let totalCategory =  await db.Product.findAndCountAll({
-                attributes: ['Category.name'],
-                where: { description: {[Op.like] : '%'+busqueda+'%' }},
-                include: [db.Category],
-                group : "Category.name"
-            })
-
-
-            let totalByCategory = {
-                accesorios : totalCategory["rows"][0]["Category"]["name"] == "Accesorios" ? totalCategory["count"]?.[0]?.["count"] : undefined,
-                bicicletas : totalCategory["rows"][0]["Category"]["name"] == "Bicicletas" ? totalCategory["count"]?.[0]?.["count"] : totalCategory["count"]?.[1]?.["count"]
-            }
-            products = products.map(product => {
-                return {
-                    id: product.id,
-                    brand: product.Brand.name,
-                    model: product.model,
-                    description: product.description,
-                    category: product.Category.name,
-                    images: product.Images,
-                    detail: `/api/productos/${product.id}`
-                };
-            })  
-            let respuesta = {
-                meta : {
-                    status : 200,
-                    total : products.length,
-                    totalByCategory ,
-                    url : '/api/productos/buscar'
-                },
-                data : products
-            } 
-
-            res.status(200).json(respuesta);
-
-        } catch (error) {
-            res.json(error.message);
         }
     },
 
