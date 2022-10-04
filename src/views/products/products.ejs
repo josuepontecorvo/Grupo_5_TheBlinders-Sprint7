@@ -106,12 +106,12 @@
                                     <img src="/images/<%= product.Images[0].fileName %> " alt="imagen de producto">
                                 </figure>
                                 <h3 class="description"><%= product.description %> </h3>
-                                <p class="price">$ <% 
+                                <p class="price destacados-products-price">$ <% 
                                     let realPrice = product.discount ? product.price * (1-product.discount/100) : +product.price;
                                     realPrice = realPrice.toFixed(0);
                                     realPrice = toThousand(realPrice);
                                 %>  <%= realPrice %>  </p>
-                                <p class="cart">
+                                <p class="add-products-to-cart">
                                     Agregar al carrito
                                     <i class="fa-solid fa-cart-shopping"></i>
                                 </p>
@@ -131,12 +131,12 @@
                                 <img src="/images/<%= product.Images[0].fileName %> " alt="imagen de producto">
                             </figure>
                             <h3 class="description"><%= product.description %> </h3>
-                            <p class="price">$ <% 
+                            <p class="price destacados-products-price">$ <% 
                                 let realPrice = product.discount ? product.price * (1-product.discount/100) : +product.price;
                                 realPrice = realPrice.toFixed(0);
                                 realPrice = toThousand(realPrice);
                             %>  <%= realPrice %>  </p>
-                            <p class="cart">
+                            <p class="add-products-to-cart">
                                 Agregar al carrito
                                 <i class="fa-solid fa-cart-shopping"></i>
                             </p>
@@ -151,12 +151,12 @@
                                     <img src="/images/<%= product.Images[0].fileName %> " alt="imagen de producto">
                                 </figure>
                                 <h3 class="description"><%= product.description %> </h3>
-                                <p class="price">$ <% 
+                                <p class="price destacados-products-price">$ <% 
                                     let realPrice = product.discount ? product.price * (1-product.discount/100) : +product.price;
                                     realPrice = realPrice.toFixed(0);
                                     realPrice = toThousand(realPrice);
                                 %>  <%= realPrice %>  </p>
-                                <p class="cart">
+                                <p class="add-products-to-cart">
                                     Agregar al carrito
                                     <i class="fa-solid fa-cart-shopping"></i>
                                 </p>
@@ -169,5 +169,6 @@
         </section>
     </main>
     <%- include('../partials/footer.ejs') %> 
+    <script src="/js/addToCart.js"></script>
 </body>
 </html>

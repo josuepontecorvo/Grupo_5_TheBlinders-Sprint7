@@ -1,5 +1,5 @@
 <article>
-    <a class="detalle" href="/productos/detalle/<%= product.id %> ">
+    <a class="detail" href="/productos/detalle/<%= product.id %> ">
         <figure>
             <img src="/images/<%= product.Images[0].fileName %> " alt="image-destacados">
         </figure>
@@ -9,7 +9,7 @@
             realPrice = realPrice.toFixed(0);
             realPrice = toThousand(realPrice);
         %>  <%= realPrice %> </p>
-        <p class="destacados-products-cart">
+        <p class="add-products-to-cart">
             Agregar al carrito
             <i class="fa-solid fa-cart-shopping"></i>
         </p>
