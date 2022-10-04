@@ -240,11 +240,11 @@ section.products-list article .price {
     color: red;
 }
 
-section.products-list article .cart {
+section.products-list article .add-products-to-cart {
     font-size: 12px;
 }
 
-section.products-list article .cart i {
+section.products-list article .add-products-to-cart i {
     color: green;
 }
 

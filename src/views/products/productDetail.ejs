@@ -39,7 +39,7 @@
                     realPrice = realPrice.toFixed(0);
                     realPrice = toThousand(realPrice);
                 %>  <%= realPrice %> </p>
-                <a href="/usuarios/carrito">
+                <a href="javascript:void(0)">
                     <button class="detail-add-cart">Agregar al carrito <i class="fa-solid fa-cart-shopping"></i></button>
                 </a>
                 <p class="detail-send-free">Envio Gratis <i class="fa-solid fa-truck-arrow-right"></i></p>
@@ -53,7 +53,7 @@
                     </form>
                     </div>
                 <% } %>
-                
+                <input id="inputId" type="hidden" value="<%= product.id %>">
             </div>
         </section>
         <section class="paid-options">
@@ -61,6 +61,7 @@
         </section>
     </main> 
     <%- include('../partials/footer.ejs') %> 
+    <script src="/js/detailAddToCart.js"></script>
 </body>
 
 </html>

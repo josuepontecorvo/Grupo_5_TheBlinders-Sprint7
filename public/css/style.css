@@ -198,7 +198,7 @@ div.burger-menu .burger-options li {
 }
     /*DESTACADOS*/
 
-.destacados a.detalle {
+.destacados a.detail {
     text-decoration: none;
     color: black;
 }
@@ -231,11 +231,11 @@ main .destacados-products-price {
     color: red;
 }
 
-main .destacados-products-cart {
+main .add-products-to-cart {
     font-size: 12px;
 }
 
-main .destacados-products-cart i {
+main .add-products-to-cart i {
     color: green;
 }
 
