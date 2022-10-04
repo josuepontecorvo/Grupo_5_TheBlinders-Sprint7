@@ -116,7 +116,7 @@ window.onload = function () {
         if (discount.value.trim() == "") {
           errors.discount = "El descuento no puede estar vacio";
         } else if (discount.value < 0 || discount.value > 100) {
-            errors.discount = "El descuento no puede ser menor a 0, ni mayor 100%";
+            errors.discount = "El descuento no puede ser menor a 0%, ni mayor a 100%";
         } else {
             delete errors.discount;
         }
@@ -164,7 +164,7 @@ window.onload = function () {
 
     form.addEventListener('submit', function (e) {
         e.preventDefault();
-
+        console.log("que paso")
         selectValidation(selectCategory);
         selectValidation(selectType);
         descriptionValidation();
