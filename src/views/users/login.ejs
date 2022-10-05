@@ -23,8 +23,10 @@
                 <div>
                     <label for="password">Contraseña:</label>
                     <input type="password" name="password" id="password" minLength="8" required>
-                    <i class="fa-solid fa-circle-check"></i>
-                    <i class="fas fa-exclamation-circle"></i>
+                    <i class="fa-regular fa-eye"></i>
+                    <i class="fa-regular fa-eye-slash"></i>
+                    <!--<i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>-->
                     <small class="feedback">
                         <%= locals.errors && errors.password ? errors.password.msg : null %>
                     </small> 

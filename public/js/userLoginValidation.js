@@ -4,6 +4,20 @@ window.onload = function () {
     const email = document.querySelector('#username');
     const password = document.querySelector('#password');
     const form = document.querySelector('.login-form');
+    const openedEye = document.querySelector('.fa-eye');
+    const closedEye = document.querySelector('.fa-eye-slash');
+
+    // Add event listeners to change password visibility
+    openedEye.addEventListener('click', () => {
+        let formControl = openedEye.parentElement 
+        formControl.classList.add('visible-password');
+        password.type = "text"
+    })
+    closedEye.addEventListener('click', () => {
+        let formControl = closedEye.parentElement 
+        formControl.classList.remove('visible-password');
+        password.type = "password"
+    })
 
     // Declare an empty object to group the validations errors 
     let errors = {};
