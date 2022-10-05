@@ -14,44 +14,57 @@
                 <div class="user-image">
                     <img src="/images/users/<%= user.image %>  " alt="">
                     <label for="user-image">Carga tú foto de perfil</label>
+                    <span class="image-value"></span>
                     <input type="file" name="image" id="user-image" style="visibility: hidden;" accept=".jpg, .png" />
-                    <span class="feedback"> <%= locals.errors && errors.image ? errors.image.msg : null %>  </span>
+                    <small class="feedback"> <%= locals.errors && errors.image ? errors.image.msg : null %>  </small>
                 </div>
                 <div class="fill-form">
-                    <diV class="user-name">
+                    <diV class="form-control user-name">
                         <label for="id">Nombre:</label>
                         <input type="text" name="firstName" placeholder="John" required id="name" minLength="2" value="<%=locals.oldData && oldData.firstName || locals.user && user.firstName%>">
-                        <span class="feedback"> <%= locals.errors && errors.firstName ? errors.firstName.msg : null %> </span>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <i class="fas fa-exclamation-circle"></i>
+                        <small class="feedback"> <%= locals.errors && errors.firstName ? errors.firstName.msg : null %> </small>
                     </diV>
-                    <div class="user-last-name">
+                    <div class="form-control user-last-name">
                         <label for="last-name">Apellido:</label>
                         <input type="text" name="lastName" placeholder="Doe" required id="last-name" minLength="2" value="<%=locals.oldData && oldData.lastName || locals.user && user.lastName%>">
-                        <span class="feedback"> <%= locals.errors && errors.lastName ? errors.lastName.msg : null %> </span>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <i class="fas fa-exclamation-circle"></i>
+                        <small class="feedback"> <%= locals.errors && errors.lastName ? errors.lastName.msg : null %> </small>
                     </div>
-                    <div class="user-date-of-birth">
+                    <div class="form-control user-date-of-birth">
                         <label for="date">Fecha de nacimiento:</label>
                         <input type="date" name="birthdate" required id="date" min="1900-01-01" max="2010-01-01" value="<%=locals.oldData && oldData.birthdate || locals.user && user.birthdate%>">
-                        <span class="feedback"> <%= locals.errors && errors.birthdate ? errors.birthdate.msg : null %> </span>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <i class="fas fa-exclamation-circle"></i>
+                        <small class="feedback"> <%= locals.errors && errors.birthdate ? errors.birthdate.msg : null %> </small>
                     </div>
-                    <div class="user-email">
+                    <div class="form-control user-email">
                         <label for="email">Email:</label>
                         <input type="email" name="email" placeholder="johndow@mail.com" required id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" value="<%=locals.oldData && oldData.email || locals.user && user.email%>">
-                        <span class="feedback"> <%= locals.errors && errors.email ? errors.email.msg : null %> </span>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <i class="fas fa-exclamation-circle"></i>
+                        <small class="feedback"> <%= locals.errors && errors.email ? errors.email.msg : null %> </small>
                     </div>
-                    <div class="user-password">
+                    <div class="form-control user-password">
                         <label for="password">Nueva contraseña:</label>
                         <input type="password" name="password"  id="password" minLength="8">
-                        <span class="feedback"> <%= locals.errors && errors.password ? errors.password.msg : null %> </span>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <i class="fas fa-exclamation-circle"></i>
+                        <small class="feedback"> <%= locals.errors && errors.password ? errors.password.msg : null %> </small>
                     </div>
-                    <div class="user-confirm-password">
+                    <div class="form-control user-confirm-password">
                         <label for="confirm-password">Confirmar contraseña:</label>
                         <input type="password" name="user-confirm-password"  id="confirm-password" minLength="8">
-                        <span class="feedback"> <%= locals.errors && errors["user-confirm-password"] ? errors["user-confirm-password"].msg : null %> </span>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <i class="fas fa-exclamation-circle"></i>
+                        <small class="feedback"> <%= locals.errors && errors["user-confirm-password"] ? errors["user-confirm-password"].msg : null %> </small>
                     </div>
-                    <div class="user-phone">
+                    <div class="form-control user-phone">
                         <label for="phone">Telefono (opcional):</label>
                         <input type="tel" name="phonenumber" placeholder="+54 911 5678 1234" id="phone" value="<%=locals.oldData && oldData.phonenumber || locals.user && user.phonenumber%>">
-                        <span class="feedback"></span>
+                        <small class="feedback"></small>
                     </div>
                 </div>
                 <div class="submit-form">
@@ -62,5 +75,6 @@
         </div>
     </main>
     <%- include('../partials/footer.ejs') %> 
+    <script src="/js/userRegisterValidation.js"></script>
 </body>
 </html>
