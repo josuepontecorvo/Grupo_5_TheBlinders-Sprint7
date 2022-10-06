@@ -174,6 +174,25 @@ div.burger-menu .burger-options li {
         visibility: hidden;
     }
 
+    main form div i.fa-eye {
+        visibility: visible;
+        color: grey;
+    }
+
+    main form div i.fa-eye-slash {
+        visibility: hidden;
+        color: grey;
+    }
+
+    main form div.visible-password i.fa-eye {
+        visibility: hidden;
+    }
+
+    main form div.visible-password i.fa-eye-slash {
+        visibility: visible;
+        color: grey;
+    }
+
     main form div.success input {
         border-color: #2ecc71;
     }
