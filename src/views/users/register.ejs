@@ -4,6 +4,7 @@
     <%- include('../partials/head.ejs') %> 
     <link rel="stylesheet" href="/css/register-style.css" type="text/css">
     <title>Bici Mundo-Registro</title>
+    <script src="/js/passwordVisibility.js" defer></script>
 </head>
 <body>
     <%- include('../partials/header.ejs') %> 
@@ -50,8 +51,8 @@
                     <div class="form-control user-password">
                         <label for="password">Password:</label>
                         <input type="password" name="password" placeholder="Password" required id="password" minLength="8">
-                        <i class="fa-solid fa-circle-check"></i>
-                        <i class="fas fa-exclamation-circle"></i>
+                        <i class="fa-regular fa-eye"></i>
+                        <i class="fa-regular fa-eye-slash"></i>
                         <small class="feedback"> <%= locals.errors && errors.password ? errors.password.msg : null %> </small>
                     </div>
                     <div class="form-control user-confirm-password">

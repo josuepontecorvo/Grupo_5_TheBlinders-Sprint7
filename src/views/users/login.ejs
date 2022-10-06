@@ -4,6 +4,7 @@
     <%- include('../partials/head.ejs') %> 
     <link rel="stylesheet" href="/css/login-style.css" type="text/css">
     <title>BiciMundo-Ingresar</title>
+    <script src="/js/passwordVisibility.js" defer></script>
 </head>
 <body>
     <%- include('../partials/header.ejs') %> 
@@ -25,8 +26,6 @@
                     <input type="password" name="password" id="password" minLength="8" required>
                     <i class="fa-regular fa-eye"></i>
                     <i class="fa-regular fa-eye-slash"></i>
-                    <!--<i class="fa-solid fa-circle-check"></i>
-                    <i class="fas fa-exclamation-circle"></i>-->
                     <small class="feedback">
                         <%= locals.errors && errors.password ? errors.password.msg : null %>
                     </small> 
