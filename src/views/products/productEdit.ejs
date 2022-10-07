@@ -30,7 +30,9 @@
                         <% }); %> 
                         <% } %> 
                     </select>
-                    <span class="feedback"></span>
+                    <small class="feedback"></small>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </div>
                 <diV class="form-control">
                     <label class="input-label" for="type">Tipo:</label>
@@ -50,37 +52,47 @@
                         <% }); %> 
                         <% } %> 
                     </select>
-                    <span class="feedback">
+                    <small class="feedback">
                         <%= locals.errors && errors.typeId ? errors.typeId.msg : null %>
-                    </span>
+                    </small>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </diV>
                 <diV class="form-control">
                     <label class="input-label" for="description">Descripción:</label>
                     <input type="text" name="description" id="description" value="<%= locals.product && product.description || locals.oldData && oldData.description %>" required>
-                    <span class="feedback">
-                        <%= locals.errors && errors.description ? errors.description.msg : null %>
-                    </span>
+                    <small class="feedback">
+                        <%= locals.errors && errors.description ? errors.description.msg : null %> 
+                    </small>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </diV>
                 <div class="form-control">
                     <label class="input-label" for="product-image">Carga la foto del producto</label>
                     <input class="file" type="file" name="image" id="product-image"  accept=".jpg, .png, .jpeg" multiple value="<%= locals.product && product.image %>"/>
-                    <span class="feedback">
+                    <small class="feedback">
                         <%= locals.errors && errors.image ? errors.image.msg : null %> 
-                    </span>
+                    </small>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </div>
                 <div class="form-control">
                     <label class="input-label" for="price">Precio:</label>
                     <input type="number" name="price" id="price" value="<%= locals.product && product.price || locals.oldData && oldData.price %>" required/>
-                    <span class="feedback">
+                    <small class="feedback">
                         <%= locals.errors && errors.price ? errors.price.msg : null %>
-                    </span>
+                    </small>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </div>
                 <div class="form-control">
                     <label class="input-label" for="discount">Descuento:</label>
                     <input type="number" name="discount" id="discount" placeholder="0" value="<%= locals.product && product.discount || locals.oldData && oldData.discount %>"/>
-                    <span class="feedback">
+                    <small class="feedback">
                         <%= locals.errors && errors.discount ? errors.discount.msg : null %> 
-                    </span>
+                    </small>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </div>
                 <diV class="form-control">
                     <label class="input-label" for="brand">Marca:</label>
@@ -103,6 +115,8 @@
                     <span class="feedback">
                         <%= locals.errors && errors.brandId ? errors.brandId.msg : null %> 
                     </span>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </diV>
                 <diV class="form-control">
                     <label class="input-label" for="model">Modelo:</label>
@@ -110,6 +124,8 @@
                     <span class="feedback">
                         <%= locals.errors && errors.model ? errors.model.msg : null %> 
                     </span>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </diV>
                 <diV class="form-control">
                     <label class="input-label" for="size">Talle:</label>
@@ -130,6 +146,8 @@
                         <% } %> 
                     </select>
                     <span class="feedback"></span>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </diV>
                 <diV class="form-control">
                     <label class="input-label" for="color">Color:</label>
@@ -150,6 +168,8 @@
                         <% } %> 
                     </select>
                     <span class="feedback"></span>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </diV>
                 <div class="form-control">
                     <label class="input-label" for="rolled">Rodado:</label>
@@ -170,6 +190,8 @@
                         <% } %> 
                     </select>
                     <span class="feedback"></span>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </div>
                 <diV class="form-control">
                     <label class="input-label" for="frame">Estructura:</label>
@@ -190,6 +212,8 @@
                         <% } %> 
                     </select>
                     <span class="feedback"></span>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </diV>
                 <diV class="form-control">
                     <label class="input-label" for="shifter">Cambios:</label>
@@ -210,6 +234,8 @@
                         <% } %> 
                     </select>
                     <span class="feedback"></span>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </diV>
                 <diV class="form-control">
                     <label class="input-label" for="brakes">Frenos:</label>
@@ -230,6 +256,8 @@
                         <% } %> 
                     </select>
                     <span class="feedback"></span>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </diV>
                 <diV class="form-control">
                     <label class="input-label" for="suspension">Suspensión:</label>
@@ -250,6 +278,8 @@
                         <% } %> 
                     </select>
                     <span class="feedback"></span>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                 </diV>
                 <diV class="form-control">
                     <label class="input-label" for="info">Info Adicional:</label>
@@ -265,5 +295,6 @@
         </div>
     </main>
     <%- include('../partials/footer.ejs') %> 
+    <script src="/js/productCreateValidation.js"></script>
 </body>
 </html>
