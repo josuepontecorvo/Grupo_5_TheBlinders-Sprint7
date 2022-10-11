@@ -121,9 +121,9 @@
                 <diV class="form-control">
                     <label class="input-label" for="model">Modelo:</label>
                     <input type="text" name="model" id="model" value="<%=locals.product && product.model || locals.oldData && oldData.model %>">
-                    <span class="feedback">
+                    <small class="feedback">
                         <%= locals.errors && errors.model ? errors.model.msg : null %> 
-                    </span>
+                    </small>
                     <i class="fa-solid fa-circle-check"></i>
                     <i class="fas fa-exclamation-circle"></i>
                 </diV>
@@ -167,7 +167,7 @@
                         <% }); %> 
                         <% } %> 
                     </select>
-                    <span class="feedback"></span>
+                    <small class="feedback"></small>
                     <i class="fa-solid fa-circle-check"></i>
                     <i class="fas fa-exclamation-circle"></i>
                 </diV>

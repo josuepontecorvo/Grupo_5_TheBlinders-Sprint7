@@ -242,6 +242,14 @@ main {
         border-color: #e74c3c;
     }
 
+    main form .form-control.success input {
+        border-color: #2ecc71;
+    }
+    
+    main form .form-control.error input {
+        border-color: #e74c3c;
+    }
+
     main form .form-control.success i.fa-circle-check {
         color: #2ecc71;
         visibility: visible;
