@@ -92,8 +92,9 @@ controlador = {
             delete user?.password;
             delete user?.roleId;
             delete user?.RoleId;
-
+            
             if (user) {
+                user.image = `/images/users/${user.image}`;
                 let respuesta = {
                     meta : {
                         status : 200,
