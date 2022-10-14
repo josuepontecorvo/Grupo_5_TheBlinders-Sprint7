@@ -127,7 +127,7 @@ controller = {
                     model: product.model,
                     description: product.description,
                     category: product.Category.name,
-                    images: product.Images,
+                    images: `/images/${product.Images[0].fileName}`,
                     detail: `/api/productos/${product.id}`
                 };
             })  
@@ -160,7 +160,10 @@ controller = {
             });    
             const product = await data?.toJSON();
 
+            
             if (product) {
+                product.Images =  `/images/${product.Images[0].fileName}`;
+                
                 let respuesta = {
                     meta : {
                         status : 200,
