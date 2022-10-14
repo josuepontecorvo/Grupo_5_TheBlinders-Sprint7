@@ -33,7 +33,7 @@ controlador = {
             } else {
 
                 data =  await User.findAndCountAll({
-                    attributes: ['id','firstName','Lastname','email','image'],
+                    attributes: ['id','firstName','lastName','email','image'],
                 })
 
             }
