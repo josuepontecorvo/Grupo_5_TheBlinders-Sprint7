@@ -364,6 +364,65 @@ controlador = {
 
     },
 
+    loginProcess: async (req,res) => {
+        try {
+            const errors = validationResult(req);
+            // There are validations errors
+            if(!errors.isEmpty()){
+                let respuesta = {
+                    meta : {
+                        status : 200,
+                        url : `/api/usuarios/ingresar`,
+                    },
+                    error : errors.mapped()
+                } 
+                return res.status(200).json(respuesta);
+            }
+            // There are not validations errors
+            let user = await User.findOne({where:{'email' : req.body.username}}).then(data => data?.toJSON());
+            // User credentials are valid
+            if (user && (bcrypt.compareSync(req.body.password, user.password))) {
+
+                delete user.password; 
+                let respuesta = {
+                    meta : {
+                        status : 200,
+                        url : `/api/usuarios/ingresar`,
+                    },
+                    data : user
+                } 
+                res.status(200).json(respuesta);
+                
+            // User credentials are not valid
+            } else {
+
+                let errors = {
+                    username : {
+                        msg: 'Credenciales inválidas'
+                    },
+                    password : {
+                        msg: 'Credenciales inválidas'
+                    }
+                }
+
+                delete req.body.password;
+                let respuesta = {
+                    meta : {
+                        status : 200,
+                        url : `/api/usuarios/ingresar`,
+                    },
+                    error : errors
+                } 
+                return res.status(200).json(respuesta);
+
+            };
+
+        } catch (error) {
+            res.json(error.message)
+        }
+        
+    },
+
 };
 
 module.exports = controlador;
