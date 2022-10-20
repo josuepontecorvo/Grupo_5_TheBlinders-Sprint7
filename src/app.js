@@ -1,6 +1,7 @@
 const express = require('express');
 const path =  require('path');
 const app = express();
+const cors = require('cors');
 const methodOverride = require('method-override');
 const session = require('express-session');
 const cookies = require('cookie-parser');
@@ -13,6 +14,8 @@ const APIUsersRouter = require('./routes/API/usersRouter');
 const APIProductsRouter = require('./routes/API/productsRouter');
 
 const port = process.env.PORT || 3000;
+
+app.use(cors());
 
 app.use(express.static(path.resolve(__dirname, '../public')));
 app.set('view engine', 'ejs');
