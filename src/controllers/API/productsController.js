@@ -7,7 +7,7 @@ const { brotliDecompress } = require('zlib');
 
 controller = {
 
-    products: async (req,res) => {
+    products: async (req, res) => {
         try {
             let data;
             let busqueda;
@@ -15,12 +15,12 @@ controller = {
             if (req.query.page <= 0) {
 
                 let respuesta = {
-                    meta : {
-                        status : 400,
-                        url : `/api/productos${req.url}`,
+                    meta: {
+                        status: 400,
+                        url: `/api/productos${req.url}`,
                     },
-                    data : 'El número de página debe ser mayor o igual a 1'
-                } 
+                    data: 'El número de página debe ser mayor o igual a 1'
+                }
                 return res.status(400).json(respuesta);
 
             };
@@ -28,12 +28,12 @@ controller = {
             if (req.query.search == "") {
 
                 let respuesta = {
-                    meta : {
-                        status : 400,
-                        url : `/api/productos${req.url}`,
+                    meta: {
+                        status: 400,
+                        url: `/api/productos${req.url}`,
                     },
-                    data : 'Debe ingresar una condición de busqueda'
-                } 
+                    data: 'Debe ingresar una condición de busqueda'
+                }
                 return res.status(400).json(respuesta);
 
             }
@@ -42,19 +42,19 @@ controller = {
             if (req.query.page > 0 && req.query.search) {
 
                 busqueda = req.query.search.toUpperCase();
-                data =  await db.Product.findAndCountAll({
-                    attributes: ['id','model','description'],
-                    include: [{model: db.Category, attributes: ['name']}, {model: db.Brand, attributes: ['name']}, {model: db.Image, attributes: ['fileName']} ],
-                    where: { description: {[Op.like] : '%'+busqueda+'%' }},
+                data = await db.Product.findAndCountAll({
+                    include: [{ model: db.Category, attributes: ['name'] }, { model: db.Brake, attributes: ['type'] }, { model: db.Brand, attributes: ['name'] }, { model: db.Image, attributes: ['fileName'] }, { model: db.WheelSize, attributes: ['number'] }, { model: db.Frame, attributes: ['name'] }, { model: db.Shift, attributes: ['number'] }, { model: db.Suspension, attributes: ['type'] }],
+                    attributes: ['description', 'model', 'price', 'discount', 'id'],
+                    where: { description: { [Op.like]: '%' + busqueda + '%' } },
                     limit: 10,
                     offset: (req.query.page - 1) * 10,
                 })
 
             } else if (req.query.page > 0) {
 
-                data =  await db.Product.findAndCountAll({
-                    attributes: ['id','model','description'],
-                    include: [{model: db.Category, attributes: ['name']}, {model: db.Brand, attributes: ['name']}, {model: db.Image, attributes: ['fileName']} ],
+                data = await db.Product.findAndCountAll({
+                    include: [{ model: db.Category, attributes: ['name'] }, { model: db.Brake, attributes: ['type'] }, { model: db.Brand, attributes: ['name'] }, { model: db.Image, attributes: ['fileName'] }, { model: db.WheelSize, attributes: ['number'] }, { model: db.Frame, attributes: ['name'] }, { model: db.Shift, attributes: ['number'] }, { model: db.Suspension, attributes: ['type'] }],
+                    attributes: ['description', 'model', 'price', 'discount', 'id'],
                     limit: 10,
                     offset: (req.query.page - 1) * 10,
                 })
@@ -62,53 +62,53 @@ controller = {
             } else if (req.query.search) {
 
                 busqueda = req.query.search.toUpperCase();
-                data =  await db.Product.findAndCountAll({
-                    attributes: ['id','model','description'],
-                    include: [{model: db.Category, attributes: ['name']}, {model: db.Brand, attributes: ['name']}, {model: db.Image, attributes: ['fileName']} ],
-                    where: { description: {[Op.like] : '%'+busqueda+'%' }},
+                data = await db.Product.findAndCountAll({
+                    include: [{ model: db.Category, attributes: ['name'] }, { model: db.Brake, attributes: ['type'] }, { model: db.Brand, attributes: ['name'] }, { model: db.Image, attributes: ['fileName'] }, { model: db.WheelSize, attributes: ['number'] }, { model: db.Frame, attributes: ['name'] }, { model: db.Shift, attributes: ['number'] }, { model: db.Suspension, attributes: ['type'] }],
+                    attributes: ['description', 'model', 'price', 'discount', 'id'],
+                    where: { description: { [Op.like]: '%' + busqueda + '%' } },
                 })
 
             } else {
-                
-                data =  await db.Product.findAndCountAll({
-                    attributes: ['id','model','description'],
-                    include: [{model: db.Category, attributes: ['name']}, {model: db.Brand, attributes: ['name']}, {model: db.Image, attributes: ['fileName']} ]
+
+                data = await db.Product.findAndCountAll({
+                    include: [{ model: db.Category, attributes: ['name'] }, { model: db.Brake, attributes: ['type'] }, { model: db.Brand, attributes: ['name'] }, { model: db.Image, attributes: ['fileName'] }, { model: db.WheelSize, attributes: ['number'] }, { model: db.Frame, attributes: ['name'] }, { model: db.Shift, attributes: ['number'] }, { model: db.Suspension, attributes: ['type'] }],
+                    attributes: ['description', 'model', 'price', 'discount', 'id'],
                 })
 
             }
-            
+
 
             let products = [...data.rows];
             let total = data.count;
             let totalByCategory = {
-                accesorios : 0,
-                bicicletas : 0
+                accesorios: 0,
+                bicicletas: 0
             }
 
             // The server can not find the requested resource.
-            if ( total == 0 ) {
+            if (total == 0) {
 
                 let respuesta = {
-                    meta : {
-                        status : 404,
-                        url : `/api/productos${req.url}`,
+                    meta: {
+                        status: 404,
+                        url: `/api/productos${req.url}`,
                     },
-                    data : 'No se encontraron productos que cumplan con la condición'
-                } 
+                    data: 'No se encontraron productos que cumplan con la condición'
+                }
                 return res.status(404).json(respuesta);
 
             };
 
             // The page number require is greater than the pages available. 
-            if (req.query.page && req.query.page > Math.ceil(total/10) ) {
+            if (req.query.page && req.query.page > Math.ceil(total / 10)) {
 
                 let respuesta = {
-                    meta : {
-                        status : 400,
-                        url : `/api/productos${req.url}`,
+                    meta: {
+                        status: 400,
+                        url: `/api/productos${req.url}`,
                     },
-                    data : 'El número de páginas disponibles es: ' + Math.ceil(total/10)
-                } 
+                    data: 'El número de páginas disponibles es: ' + Math.ceil(total / 10)
+                }
                 return res.status(400).json(respuesta);
 
             };
@@ -116,12 +116,14 @@ controller = {
             // The server find requested resource
             products = products.map(product => {
                 if (product.Category.name == 'Bicicletas') {
-                    ++totalByCategory.bicicletas 
+                    ++totalByCategory.bicicletas
                 } else if (product.Category.name == 'Accesorios') {
-                    ++totalByCategory.accesorios 
+                    ++totalByCategory.accesorios
                 }
 
                 return {
+                    price: product.price,
+                    discount: product.discount,
                     id: product.id,
                     brand: product.Brand.name,
                     model: product.model,
@@ -130,19 +132,19 @@ controller = {
                     images: `/images/${product.Images[0].fileName}`,
                     detail: `/api/productos/${product.id}`
                 };
-            })  
-            
+            })
+
             let respuesta = {
-                meta : {
-                    status : 200,
-                    total : products.length,
-                    totalByCategory ,
-                    url : `/api/productos${req.url}`,
-                    next: (req.query.page && req.query.page * 10 < total) ? `/api/productos/?page=${+req.query.page + 1}${req.query.search ? '&search='+req.query.search : '' }` : '',
-                    previous: +req.query.page > 1 ? `/api/productos/?page=${+req.query.page - 1}${req.query.search ? '&search='+req.query.search : '' }` : ''
+                meta: {
+                    status: 200,
+                    total: products.length,
+                    totalByCategory,
+                    url: `/api/productos${req.url}`,
+                    next: (req.query.page && req.query.page * 10 < total) ? `/api/productos/?page=${+req.query.page + 1}${req.query.search ? '&search=' + req.query.search : ''}` : '',
+                    previous: +req.query.page > 1 ? `/api/productos/?page=${+req.query.page - 1}${req.query.search ? '&search=' + req.query.search : ''}` : ''
                 },
-                data : products
-            } 
+                data: products
+            }
 
             return res.status(200).json(respuesta);
 
@@ -151,41 +153,41 @@ controller = {
         }
     },
 
-    detail: async (req,res) => {
+    detail: async (req, res) => {
         try {
             const id = +req.params.id;
             const data = await db.Product.findByPk(id, {
-                include: [{model: db.Brake, attributes: ['type'] }, {model: db.Brand, attributes: ['name'] }, {model: db.Image, attributes: ['fileName'] }, {model: db.WheelSize, attributes: ['number'] }, {model: db.Frame, attributes: ['name'] }, {model: db.Shift, attributes: ['number'] }, {model: db.Suspension, attributes: ['type'] }],
+                include: [{ model: db.Brake, attributes: ['type'] }, { model: db.Brand, attributes: ['name'] }, { model: db.Image, attributes: ['fileName'] }, { model: db.WheelSize, attributes: ['number'] }, { model: db.Frame, attributes: ['name'] }, { model: db.Shift, attributes: ['number'] }, { model: db.Suspension, attributes: ['type'] }],
                 attributes: ['description', 'model', 'price', 'discount'],
-            });    
+            });
             const product = await data?.toJSON();
 
-            
+
             if (product) {
-                product.Images =  `/images/${product.Images[0].fileName}`;
-                
+                product.Images = `/images/${product.Images[0].fileName}`;
+
                 let respuesta = {
-                    meta : {
-                        status : 200,
-                        url : `/api/productos/${id}`,
+                    meta: {
+                        status: 200,
+                        url: `/api/productos/${id}`,
                     },
-                    data : product
-                } 
+                    data: product
+                }
                 res.status(200).json(respuesta);
             } else {
                 let respuesta = {
-                    meta : {
-                        status : 404,
-                        url : `/api/productos/${req.params.id}`,
+                    meta: {
+                        status: 404,
+                        url: `/api/productos/${req.params.id}`,
                     },
-                    data : 'Producto no encontrado'
-                } 
+                    data: 'Producto no encontrado'
+                }
                 res.status(404).json(respuesta);
             }
         } catch (error) {
-            res.json({error: error.message});
+            res.json({ error: error.message });
         }
-        
+
     },
 
     store: async (req, res) => {
@@ -194,23 +196,23 @@ controller = {
 
             if (req.body.id) {
                 let respuesta = {
-                    meta : {
-                        status : 400,
-                        url : `/api/productos/crear`,
+                    meta: {
+                        status: 400,
+                        url: `/api/productos/crear`,
                     },
-                    data : 'No puede enviar el id en el body'
-                } 
+                    data: 'No puede enviar el id en el body'
+                }
                 return res.status(400).json(respuesta);
             }
 
             // Validaciones de productos
 
-                const errors = validationResult(req);
+            const errors = validationResult(req);
             if (errors.isEmpty()) {
-                let imagenes= []
+                let imagenes = []
                 const newProduct = await db.Product.create(product);
                 if (req.files) {
-                    for(let i = 0 ; i<req.files.length;i++) {
+                    for (let i = 0; i < req.files.length; i++) {
                         imagenes.push({
                             fileName: req.files[i].filename,
                             productId: newProduct.id
@@ -234,15 +236,15 @@ controller = {
 
 
                 let respuesta = {
-                    meta : {
-                        status : 201,
-                        url : `/api/productos/${newProduct.id}`,
+                    meta: {
+                        status: 201,
+                        url: `/api/productos/${newProduct.id}`,
                     },
-                    data : newProduct
-                } 
+                    data: newProduct
+                }
                 res.status(201).json(respuesta);
-                
-                
+
+
             } else {
                 // if (req.files) {
                 //     let {files} = req;
@@ -251,46 +253,46 @@ controller = {
                 // }
                 // };
                 let respuesta = {
-                    meta : {
-                        status : 400,
-                        url : `/api/productos/crear`,
+                    meta: {
+                        status: 400,
+                        url: `/api/productos/crear`,
                     },
-                    data : errors.mapped()
-                } 
+                    data: errors.mapped()
+                }
                 res.status(400).json(respuesta);
             }
         } catch (error) {
-            res.json({error: error.message});
+            res.json({ error: error.message });
         }
-        
+
     },
 
-    update: async (req,res) => {
+    update: async (req, res) => {
         try {
             // Validaciones de productos
 
             let idToUpdate = req.params.id;
-            const productToUpdate = await db.Product.findByPk(idToUpdate);  
+            const productToUpdate = await db.Product.findByPk(idToUpdate);
 
             if (!productToUpdate) {
                 let respuesta = {
-                    meta : {
-                        status : 404,
-                        url : `/api/productos/editar/${req.params.id}`,
+                    meta: {
+                        status: 404,
+                        url: `/api/productos/editar/${req.params.id}`,
                     },
-                    data : 'Producto no encontrado'
-                } 
+                    data: 'Producto no encontrado'
+                }
                 return res.status(404).json(respuesta);
-    
-    
+
+
             } else if (req.body.id) {
                 let respuesta = {
-                    meta : {
-                        status : 400,
-                        url : `/api/producto/editar/${req.params.id}`,
+                    meta: {
+                        status: 400,
+                        url: `/api/producto/editar/${req.params.id}`,
                     },
-                    data : 'No puede enviar el id en el body'
-                } 
+                    data: 'No puede enviar el id en el body'
+                }
                 return res.status(400).json(respuesta);
             }
 
@@ -300,7 +302,7 @@ controller = {
             if (errors.isEmpty()) {
 
                 let dataUpdate = req.body;
-                let imagenes= []
+                let imagenes = []
                 await db.Product.update({
                     ...dataUpdate,
                 }, {
@@ -311,7 +313,7 @@ controller = {
 
                 if (req.files) {
 
-                    for(let i = 0 ; i<req.files.length;i++) {
+                    for (let i = 0; i < req.files.length; i++) {
                         imagenes.push({
                             fileName: req.files[i].filename,
                             productId: idToUpdate
@@ -321,48 +323,48 @@ controller = {
                 }
 
                 if (imagenes.length > 0) {
-                    const oldImages = await db.Image.findAll({where: {productId: idToUpdate}})
-                    oldImages.forEach( image => {
-                        fs.unlinkSync(path.resolve(__dirname, '../../public/images/'+image.fileName))
+                    const oldImages = await db.Image.findAll({ where: { productId: idToUpdate } })
+                    oldImages.forEach(image => {
+                        fs.unlinkSync(path.resolve(__dirname, '../../public/images/' + image.fileName))
                     })
-                    await db.Image.destroy({where: {productId: idToUpdate}})
+                    await db.Image.destroy({ where: { productId: idToUpdate } })
                     await db.Image.bulkCreate(imagenes)
                 }
 
-                const product = await db.Product.findByPk(idToUpdate);  
+                const product = await db.Product.findByPk(idToUpdate);
 
                 let respuesta = {
-                    meta : {
-                        status : 200,
-                        url : `/api/productos/editar/${idToUpdate}`,
+                    meta: {
+                        status: 200,
+                        url: `/api/productos/editar/${idToUpdate}`,
                     },
-                    data : product
-                } 
+                    data: product
+                }
                 res.status(200).json(respuesta);
 
             } else {
                 if (req.files) {
-                    let {files} = req;
-                    for (let i = 0 ; i< files.length; i++) {
-                        fs.unlinkSync(path.resolve(__dirname, '../../public/images/'+files[i].filename))
+                    let { files } = req;
+                    for (let i = 0; i < files.length; i++) {
+                        fs.unlinkSync(path.resolve(__dirname, '../../public/images/' + files[i].filename))
                     }
                 };
                 let respuesta = {
-                    meta : {
-                        status : 400,
-                        url : `/api/productos/editar/${idToUpdate}`,
+                    meta: {
+                        status: 400,
+                        url: `/api/productos/editar/${idToUpdate}`,
                     },
-                    data : errors.mapped()
-                } 
+                    data: errors.mapped()
+                }
                 res.status(400).json(respuesta);
             }
 
         } catch (error) {
-            res.json({error: error.message});
+            res.json({ error: error.message });
         }
     },
 
-    delete: async (req,res) => {
+    delete: async (req, res) => {
         try {
 
             const { id } = req.params;
@@ -372,7 +374,7 @@ controller = {
             if (product) {
 
                 let imagenes = await db.Image.findAll({
-                    where: {productId: id}
+                    where: { productId: id }
                 });
                 // if (imagenes) {
                 //     let files = imagenes.filter(image => image.fileName != 'default-product-image.png');
@@ -387,7 +389,7 @@ controller = {
                 }, {
                     force: true
                 });
-    
+
                 await db.Product.destroy({
                     where: {
                         id
@@ -397,22 +399,22 @@ controller = {
                 });
 
                 let respuesta = {
-                    meta : {
-                        status : 200,
-                        url : `/api/productos/eliminar/${id}`,
+                    meta: {
+                        status: 200,
+                        url: `/api/productos/eliminar/${id}`,
                     },
-                    data : product
-                } 
+                    data: product
+                }
                 res.status(200).json(respuesta);
 
             } else {
                 let respuesta = {
-                    meta : {
-                        status : 404,
-                        url : `/api/productos/eliminar/${req.params.id}`,
+                    meta: {
+                        status: 404,
+                        url: `/api/productos/eliminar/${req.params.id}`,
                     },
-                    data : 'Producto no encontrado'
-                } 
+                    data: 'Producto no encontrado'
+                }
                 res.status(404).json(respuesta);
             }
 
@@ -424,6 +426,50 @@ controller = {
 
         }
     },
+
+    lastProduct: async (req, res) => {
+        try {
+            // traemos el ultimo producto de la base de datos
+
+            let data = await db.Product.findAll({
+                include: [{ model: db.Brake, attributes: ['type'] }, { model: db.Brand, attributes: ['name'] }, { model: db.Image, attributes: ['fileName'] }, { model: db.WheelSize, attributes: ['number'] }, { model: db.Frame, attributes: ['name'] }, { model: db.Shift, attributes: ['number'] }, { model: db.Suspension, attributes: ['type'] }],
+                attributes: ['description', 'model', 'price', 'discount'],
+                order: [['id', 'DESC']],
+                limit: 1
+            })
+
+            let product = [...data][0]
+
+
+            // el producto existe
+            if (product) {
+                product = product.toJSON()
+                product.Images = `/images/${product.Images[0].fileName}`;
+
+                let respuesta = {
+                    meta: {
+                        status: 200,
+                        url: `/api/productos/ultimo`,
+                    },
+                    data: product
+                }
+                res.status(200).json(respuesta);
+            } else {
+                // el producto no existe
+                let respuesta = {
+                    meta: {
+                        status: 404,
+                        url: `/api/productos/ultimo`,
+                    },
+                    data: 'Producto no encontrado'
+                }
+                res.status(404).json(respuesta);
+            }
+
+        } catch (error) {
+            res.json(error.message);
+        }
+    }
 
 };
 

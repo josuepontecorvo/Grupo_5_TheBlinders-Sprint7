@@ -9,7 +9,6 @@ const userLoggedMiddleware = require('./middleware/userLoggedMiddleware');
 const mainRouter = require('./routes/mainRouter');
 const usersRouter = require('./routes/usersRouter');
 const productsRouter = require('./routes/productsRouter');
-const cors = require('cors');
 // API routers
 const APIUsersRouter = require('./routes/API/usersRouter');
 const APIProductsRouter = require('./routes/API/productsRouter');

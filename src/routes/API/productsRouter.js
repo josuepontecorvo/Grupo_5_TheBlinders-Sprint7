@@ -8,6 +8,7 @@ const productEditValidation = require('../../middleware/API/productEditValidatio
 
 
 router.get('/', productsController.products);
+router.get('/ultimo', productsController.lastProduct);
 router.get('/:id', productsController.detail);
 router.post('/crear',uploadFile.array('image'), productCreateValidation,  productsController.store);
 router.put('/editar/:id',uploadFile.array('image'),productEditValidation , productsController.update);
