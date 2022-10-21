@@ -536,10 +536,40 @@ controller = {
                 suspensionsJson.push(suspension.toJSON())
             });
 
+            // traemos los tipos 
+            let types = await db.Type.findAll()
+            // Creamos un array 
+            let typesJson = [];
+
+            types.forEach( type => {
+                typesJson.push(type.toJSON())
+            });
+
+            // traemos los talles
+            let sizes = await db.Size.findAll()
+            // Creamos un array 
+            let sizesJson = [];
+
+            sizes.forEach( size => {
+                sizesJson.push(size.toJSON())
+            });
+
+            // traemos los colores
+            let colors = await db.Color.findAll()
+            // Creamos un array 
+            let colorsJson = [];
+
+            colors.forEach( color => {
+                colorsJson.push(color.toJSON())
+            });
+
             // Creamos un objeto literal con todos los datos traidos
 
             let data = {
                 categories: categoriesJson,
+                types:  typesJson,
+                sizes: sizesJson,
+                colors: colorsJson,
                 brakes: brakesJson,
                 brands: brandsJson,
                 wheelSizes: wheelSizesJson,
