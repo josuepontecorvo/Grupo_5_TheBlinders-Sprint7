@@ -185,18 +185,18 @@ window.onload = function () {
 
     // validations when the users submit the form
 
-    // form.addEventListener('submit', function (e) {
-    //     e.preventDefault();
-    //     nameValidation();
-    //     lastNameValidation();
-    //     emailValidation();
-    //     passwordValidation();
-    //     repasswordValidation();
-    //     imageValidation();
-    //     birthdateValidation ();
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        // nameValidation();
+        // lastNameValidation();
+        // emailValidation();
+        // passwordValidation();
+        // repasswordValidation();
+        // imageValidation();
+        // birthdateValidation ();
 
-    //     if (!Object.keys(errors).length) form.submit();
-    // })
+        if (!Object.keys(errors).length) form.submit();
+    })
 
     // Validations when the users left an input
 

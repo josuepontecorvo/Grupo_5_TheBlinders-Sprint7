@@ -164,7 +164,6 @@ window.onload = function () {
 
     form.addEventListener('submit', function (e) {
         e.preventDefault();
-        console.log("que paso")
         selectValidation(selectCategory);
         selectValidation(selectType);
         descriptionValidation();

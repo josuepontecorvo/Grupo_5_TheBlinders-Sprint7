@@ -1,212 +1,203 @@
 window.onload = function () {
     // Catch the inputs from the DOM
-    const imageValue = document.querySelector('.image-value')
-    const image = document.querySelector('#user-image');
-    const name = document.querySelector('#name');
-    const lastName = document.querySelector('#last-name');
-    const birthdate = document.querySelector('#date');
-    const email = document.querySelector('#email');
-    const password = document.querySelector('#password');
-    const repassword = document.querySelector('#confirm-password');
-    const form = document.querySelector('.register-form');
+    const selectCategory = document.querySelector('[name="categoryId"]');
+    const selectType = document.querySelector('[name="typeId"]');
+    const description = document.querySelector('#description');
+    const image = document.querySelector('#product-image');
+    const price = document.querySelector('#price');
+    const discount = document.querySelector('#discount');
+    const selectBrand = document.querySelector('[name="brandId"]');
+    const model = document.querySelector('#model');
+    const selectColor = document.querySelector('[name="colorId"]');
+    const form = document.querySelector('.CRUD-form');
 
     // Declare an empty object to group the validations errors 
     let errors = {};
 
     // Declare the functions that validate the inputs
-    function nameValidation () {
-        if (name.value.trim() == "") {
-            errors.name = "El campo nombre no puede estar vacio";
-        } else if (name.value.length < 2) {
-            errors.name = "El nombre debe contener 2 caracteres como mínimo";
+    function selectValidation (select) {
+       
+        if ( !select.value ) {   
+            errors[select] = "Debes seleccionar una opción"
+        } else {
+            delete errors[select]
+        }
+
+        const feedback = select.nextElementSibling;
+        let formControl = select.parentElement;
+
+        if(errors[select]) {
+            feedback.innerText = errors[select];
+            formControl.classList.add('error');
+            formControl.classList.remove('success');
+        } else {
+            formControl.classList.remove('error');
+            formControl.classList.add('success');
+            feedback.innerText = "";
+        }
+    }
+
+    function descriptionValidation () {
+        if (description.value.trim() == "") {
+            errors.description = "El campo descripción no puede estar vacio";
+        } else if (description.value.length < 8) {
+            errors.description = "La descripción debe contener 8 caracteres como mínimo";
         } else {            
-            delete errors.name
+            delete errors.description
         }
         // Verificate if errors exist
-        let formControl = name.parentElement
+        let formControl = description.parentElement;
+        const feedback = description.nextElementSibling;
 
-        if (errors.name) {
+        if (errors.description) {
+            feedback.innerText = errors.description
             formControl.classList.add('error');
             formControl.classList.remove('success');
-            formControl.querySelector('small').innerText = errors.name;
         } else {
             formControl.classList.remove('error');
             formControl.classList.add('success');
-            formControl.querySelector('small').innerText = "";
-        }
-    }
-
-    function lastNameValidation () {
-        if (lastName.value.trim() == "") {
-            errors.lastName = "El campo apellido no puede estar vacio";
-        } else if (lastName.value.length < 2) {
-            errors.lastName = "El apellido debe contener 2 caracteres como mínimo";
-        } else {
-            delete errors.lastName
-        }        // Verificate if errors exist
-        let formControl = lastName.parentElement
-
-        if (errors.lastName) {
-            formControl.classList.add('error');
-            formControl.classList.remove('success');
-            formControl.querySelector('small').innerText = errors.lastName;
-        } else {
-            formControl.classList.remove('error');
-            formControl.classList.add('success');
-            formControl.querySelector('small').innerText = "";
-        }
-    }
-
-
-    function emailValidation () {
-        if (email.value.trim() == "") {
-            errors.email = "El campo email no puede estar vacio";
-        } else if (!/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(email.value)) {
-            errors.email = "Debe ingresar un email con formato válido";
-        } else {
-            delete errors.email
-        }
-        // Verificate if errors exist
-        let formControl = email.parentElement
-
-        if (errors.email) {
-            formControl.classList.add('error');
-            formControl.classList.remove('success');
-            formControl.querySelector('small').innerText = errors.email;
-        } else {
-            formControl.classList.remove('error');
-            formControl.classList.add('success');
-            formControl.querySelector('small').innerText = "";
-        }
-    }
-
-    function passwordValidation () {
-        if (password.value.trim() == "") {
-            errors.password = "El campo contraseña no puede estar vacio";
-        } else if (password.value.length < 8 ) {
-            errors.password = "La contraseña debe contener 8 caracteres como mínimo";
-        } else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password.value)) {
-            errors.password = "La contraseña debe contener 8 caracteres como mínimo y un número";
-        } else {
-            delete errors.password
-        }
-        // Verificate if errors exist
-        let formControl = password.parentElement
-
-        if (errors.password) {
-            formControl.classList.add('error');
-            formControl.classList.remove('success');
-            formControl.querySelector('small').innerText = errors.password;
-        } else {
-            formControl.classList.remove('error');
-            formControl.classList.add('success');
-            formControl.querySelector('small').innerText = "";
-        }
-    }
-
-    function repasswordValidation () {
-        if (repassword.value.trim() == "") {
-            errors.repassword = "El campo contraseña no puede estar vacio";
-        } else if (password.value != repassword.value) {
-            errors.repassword = "Las contraseñas no coinciden"
-        } else {
-            delete errors.repassword
-        }
-        // Verificate if errors exist
-        let formControl = repassword.parentElement
-
-        if (errors.repassword) {
-            formControl.classList.add('error');
-            formControl.classList.remove('success');
-            formControl.querySelector('small').innerText = errors.repassword;
-        } else {
-            formControl.classList.remove('error');
-            formControl.classList.add('success');
-            formControl.querySelector('small').innerText = "";
+            feedback.innerText = "";
         }
     }
 
     function imageValidation () {
-        imageValue.innerText = '';
-        let allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-        if (!allowedExtensions.exec(image.value)) {
+        let allowedExtensions = /(\.jpg|\.jpeg|\.png.)$/i;
+        if (!image.value) {
+           errors.image = 'Debes ingresar una imagen'
+        } else if (!allowedExtensions.exec(image.value)) {
            errors.image = 'Los tipos de archivos aceptados son: .jpg, .jpeg y .png'; 
         } else {
             delete errors.image;
-            let name = image.value.split('\\')
-            imageValue.innerText = name[name.length-1];
         }
 
-        let formControl = image.parentElement
-        let small = formControl.querySelector('small')
-        if (errors.image) {
-            small.innerText = errors.image;
-            small.style.visibility = "visible";
-        } else {
-            small.innerText = "";
-            small.style.visibility = "hide";
-        }
-
-    }
-
-    function birthdateValidation () {
-        function calculateAge (birthdateInput) {
-            birthdateInput = birthdateInput.value.split('-').join('/'); 
-            let today = new Date();
-            let birthdateDateFormat = new Date(birthdateInput);
-            let year = today.getFullYear() - birthdateDateFormat.getFullYear();
-            let month = today.getMonth() - birthdateDateFormat.getMonth();
-            if (month < 0 || (month === 0 && today.getDate() < birthdateDateFormat.getDate())) {
-                year--;
-            }
-            return year;
-        }
-                
-        if (birthdate.value == "") {
-            errors.birthdate = "El campo edad no puede estar vacio";
-        } else if (calculateAge(date) < 18) {
-            errors.birthdate = "Eres menor de edad"
-        } else {
-            delete errors.birthdate;
-        }
         // Verificate if errors exist
-        let formControl = birthdate.parentElement
+        let formControl = image.parentElement;
+        const feedback = image.nextElementSibling;
 
-        if (errors.birthdate) {
+        if (errors.image) {
+            feedback.innerText = errors.image;
             formControl.classList.add('error');
             formControl.classList.remove('success');
-            formControl.querySelector('small').innerText = errors.birthdate;
         } else {
             formControl.classList.remove('error');
             formControl.classList.add('success');
-            formControl.querySelector('small').innerText = "";
+            feedback.innerText = "";
         }
+
     }
+
+    function priceValidation () {
+        
+        if (price.value.trim() == "") {
+          errors.price = "El precio no puede estar vacio";
+        } else if (price.value <= 0) {
+            errors.price = "El precio no puede ser menor a cero";
+        } else {
+            delete errors.price;
+        }
+      
+        // Verificate if errors exist
+        let formControl = price.parentElement;
+        const feedback = price.nextElementSibling;
+
+        if (errors.price) {
+            feedback.innerText = errors.price;
+            formControl.classList.add('error');
+            formControl.classList.remove('success');
+        } else {
+            formControl.classList.remove('error');
+            formControl.classList.add('success');
+            feedback.innerText = "";
+        }
+      };
+
+      function discountValidation () {
+        
+        if (discount.value.trim() == "") {
+          errors.discount = "El descuento no puede estar vacio";
+        } else if (discount.value < 0 || discount.value > 100) {
+            errors.discount = "El descuento no puede ser menor a 0%, ni mayor a 100%";
+        } else {
+            delete errors.discount;
+        }
+      
+        // Verificate if errors exist
+        let formControl = discount.parentElement;
+        const feedback = discount.nextElementSibling;
+
+        if (errors.discount) {
+            feedback.innerText = errors.discount;
+            formControl.classList.add('error');
+            formControl.classList.remove('success');
+        } else {
+            formControl.classList.remove('error');
+            formControl.classList.add('success');
+            feedback.innerText = "";
+        }
+      };
+
+      function modelValidation () {
+        if (model.value.trim() == "") {
+            errors.model = "El campo modelo no puede estar vacio";
+        } else if (model.value.length < 2) {
+            errors.model = "El modelo debe contener 2 caracteres como mínimo";
+        } else {            
+            delete errors.model
+        }
+        // Verificate if errors exist
+        let formControl = model.parentElement;
+        const feedback = model.nextElementSibling;
+
+        if (errors.model) {
+            feedback.innerText = errors.model
+            formControl.classList.add('error');
+            formControl.classList.remove('success');
+        } else {
+            formControl.classList.remove('error');
+            formControl.classList.add('success');
+            feedback.innerText = "";
+        }
+    };
+
 
     // validations when the users submit the form
 
-    // form.addEventListener('submit', function (e) {
-    //     e.preventDefault();
-    //     nameValidation();
-    //     lastNameValidation();
-    //     emailValidation();
-    //     passwordValidation();
-    //     repasswordValidation();
-    //     imageValidation();
-    //     birthdateValidation ();
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        // selectValidation(selectCategory);
+        // selectValidation(selectType);
+        // descriptionValidation();
+        // imageValidation();
+        // priceValidation();
+        // discountValidation();
+        // selectValidation(selectBrand);
+        // modelValidation();
+        // selectValidation(selectColor);
 
-    //     if (!Object.keys(errors).length) form.submit();
-    // })
+        if (!Object.keys(errors).length) form.submit();
+    })
 
     // Validations when the users left an input
 
+    selectCategory.addEventListener('blur', function () {
+        selectValidation(this)
+    });
+    selectType.addEventListener('blur', function () {
+        selectValidation(this)
+    });
+    description.addEventListener('blur', descriptionValidation);
     image.addEventListener('change', imageValidation);
-    name.addEventListener('blur', nameValidation);
-    lastName.addEventListener('blur', lastNameValidation);
-    birthdate.addEventListener('blur', birthdateValidation);
-    email.addEventListener('blur', emailValidation);
-    password.addEventListener('blur', passwordValidation);
-    repassword.addEventListener('blur', repasswordValidation);
+    price.addEventListener('blur', priceValidation);
+    discount.addEventListener('blur', discountValidation);
+    selectBrand.addEventListener('blur', function () {
+        selectValidation(this)
+    });
+    model.addEventListener('blur', modelValidation);
+    selectColor.addEventListener('blur', function () {
+        selectValidation(this)
+    });
+
+
 
 
 }
