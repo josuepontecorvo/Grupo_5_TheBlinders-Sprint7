@@ -215,11 +215,10 @@ div.burger-menu .burger-options li {
         margin: 5px;
         display: block;
         position: absolute;
-        visibility: hidden;
+        color: #e74c3c;
     }
 
     main form div.error small {
-        visibility: visible;
         color: #e74c3c;
     }
     
