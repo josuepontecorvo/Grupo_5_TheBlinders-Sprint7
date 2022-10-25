@@ -264,11 +264,10 @@ main {
         margin: 5px;
         display: block;
         position: absolute;
-        visibility: hidden;
+        color: #e74c3c;
     }
 
     main form .form-control.error small {
-        visibility: visible;
         color: #e74c3c;
     }
 

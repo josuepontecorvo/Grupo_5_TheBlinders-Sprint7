@@ -262,11 +262,10 @@ main {
         margin: 5px;
         position: absolute;
         display: block;
-        visibility: hidden;
+        color: #e74c3c;
     }
 
     main form .form-control.error small {
-        visibility: visible;
         color: #e74c3c;
     }
 

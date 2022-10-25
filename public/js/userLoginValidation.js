@@ -14,7 +14,7 @@ window.onload = function () {
         if (email.value.trim() == "") {
             errors.email = "El campo email no puede estar vacio";
         } else if (!/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(email.value)) {
-            errors.email = "Debe ingresar un email con formato válido";
+            errors.email = "Ingrese un email válido";
         } else {
             delete errors.email
         }
