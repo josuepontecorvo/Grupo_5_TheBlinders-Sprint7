@@ -16,9 +16,9 @@ window.onload = function () {
     // Declare the functions that validate the inputs
     function nameValidation () {
         if (name.value.trim() == "") {
-            errors.name = "El campo nombre no puede estar vacio";
+            errors.name = "El campo no puede estar vacio";
         } else if (name.value.length < 2) {
-            errors.name = "El nombre debe contener 2 caracteres como mínimo";
+            errors.name = "mínimo 2 caracteres";
         } else {            
             delete errors.name
         }
@@ -38,9 +38,9 @@ window.onload = function () {
 
     function lastNameValidation () {
         if (lastName.value.trim() == "") {
-            errors.lastName = "El campo apellido no puede estar vacio";
+            errors.lastName = "El campo no puede estar vacio";
         } else if (lastName.value.length < 2) {
-            errors.lastName = "El apellido debe contener 2 caracteres como mínimo";
+            errors.lastName = "mínimo 2 caracteres";
         } else {
             delete errors.lastName
         }        // Verificate if errors exist
@@ -60,9 +60,9 @@ window.onload = function () {
 
     function emailValidation () {
         if (email.value.trim() == "") {
-            errors.email = "El campo email no puede estar vacio";
+            errors.email = "El campo no puede estar vacio";
         } else if (!/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(email.value)) {
-            errors.email = "Debe ingresar un email con formato válido";
+            errors.email = "Formato de email inválido";
         } else {
             delete errors.email
         }
@@ -82,11 +82,11 @@ window.onload = function () {
 
     function passwordValidation () {
         if (password.value.trim() == "") {
-            errors.password = "El campo contraseña no puede estar vacio";
+            errors.password = "El campo no puede estar vacio";
         } else if (password.value.length < 8 ) {
-            errors.password = "La contraseña debe contener 8 caracteres como mínimo";
+            errors.password = "Mínimo 8 caracteres";
         } else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password.value)) {
-            errors.password = "La contraseña debe contener 8 caracteres como mínimo y un número";
+            errors.password = "Mínimo 8 caracteres y un número";
         } else {
             delete errors.password
         }
@@ -106,7 +106,7 @@ window.onload = function () {
 
     function repasswordValidation () {
         if (repassword.value.trim() == "") {
-            errors.repassword = "El campo contraseña no puede estar vacio";
+            errors.repassword = "El campo no puede estar vacio";
         } else if (password.value != repassword.value) {
             errors.repassword = "Las contraseñas no coinciden"
         } else {
@@ -130,7 +130,7 @@ window.onload = function () {
         imageValue.innerText = '';
         let allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
         if (!allowedExtensions.exec(image.value)) {
-           errors.image = 'Los tipos de archivos aceptados son: .jpg, .jpeg y .png'; 
+           errors.image = 'Aceptamos: .jpg, .jpeg y .png'; 
         } else {
             delete errors.image;
             let name = image.value.split('\\')
@@ -163,7 +163,7 @@ window.onload = function () {
         }
                 
         if (birthdate.value == "") {
-            errors.birthdate = "El campo edad no puede estar vacio";
+            errors.birthdate = "El campo no puede estar vacio";
         } else if (calculateAge(date) < 18) {
             errors.birthdate = "Eres menor de edad"
         } else {

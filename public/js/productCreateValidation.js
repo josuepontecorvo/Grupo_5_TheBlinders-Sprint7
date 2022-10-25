@@ -39,9 +39,9 @@ window.onload = function () {
 
     function descriptionValidation () {
         if (description.value.trim() == "") {
-            errors.description = "El campo descripción no puede estar vacio";
+            errors.description = "El campo no puede estar vacio";
         } else if (description.value.length < 8) {
-            errors.description = "La descripción debe contener 8 caracteres como mínimo";
+            errors.description = "Mínimo 8 caracteres";
         } else {            
             delete errors.description
         }
@@ -65,7 +65,7 @@ window.onload = function () {
         if (!image.value) {
            errors.image = 'Debes ingresar una imagen'
         } else if (!allowedExtensions.exec(image.value)) {
-           errors.image = 'Los tipos de archivos aceptados son: .jpg, .jpeg y .png'; 
+           errors.image = 'Aceptamos: .jpg, .jpeg y .png'; 
         } else {
             delete errors.image;
         }
@@ -89,9 +89,9 @@ window.onload = function () {
     function priceValidation () {
         
         if (price.value.trim() == "") {
-          errors.price = "El precio no puede estar vacio";
+          errors.price = "El campo no puede estar vacio";
         } else if (price.value <= 0) {
-            errors.price = "El precio no puede ser menor a cero";
+            errors.price = "El precio debe ser mayor a 0";
         } else {
             delete errors.price;
         }
@@ -114,9 +114,9 @@ window.onload = function () {
       function discountValidation () {
         
         if (discount.value.trim() == "") {
-          errors.discount = "El descuento no puede estar vacio";
+          errors.discount = "El campo no puede estar vacio";
         } else if (discount.value < 0 || discount.value > 100) {
-            errors.discount = "El descuento no puede ser menor a 0%, ni mayor a 100%";
+            errors.discount = "Descuento: 0% - 100%";
         } else {
             delete errors.discount;
         }
@@ -138,9 +138,9 @@ window.onload = function () {
 
       function modelValidation () {
         if (model.value.trim() == "") {
-            errors.model = "El campo modelo no puede estar vacio";
+            errors.model = "El campo no puede estar vacio";
         } else if (model.value.length < 2) {
-            errors.model = "El modelo debe contener 2 caracteres como mínimo";
+            errors.model = "Mínimo 2 caracteres";
         } else {            
             delete errors.model
         }
