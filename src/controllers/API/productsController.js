@@ -324,9 +324,9 @@ controller = {
 
                 if (imagenes.length > 0) {
                     const oldImages = await db.Image.findAll({ where: { productId: idToUpdate } })
-                    oldImages.forEach(image => {
-                        fs.unlinkSync(path.resolve(__dirname, '../../public/images/' + image.fileName))
-                    })
+                    // oldImages.forEach(image => {
+                    //     fs.unlinkSync(path.resolve(__dirname, '../../public/images/' + image.fileName))
+                    // })
                     await db.Image.destroy({ where: { productId: idToUpdate } })
                     await db.Image.bulkCreate(imagenes)
                 }
@@ -345,9 +345,9 @@ controller = {
             } else {
                 if (req.files) {
                     let { files } = req;
-                    for (let i = 0; i < files.length; i++) {
-                        fs.unlinkSync(path.resolve(__dirname, '../../public/images/' + files[i].filename))
-                    }
+                    // for (let i = 0; i < files.length; i++) {
+                    //     fs.unlinkSync(path.resolve(__dirname, '../../public/images/' + files[i].filename))
+                    // }
                 };
                 let respuesta = {
                     meta: {
@@ -592,7 +592,40 @@ controller = {
         } catch (error) {
             res.json(error.message);
         }
-    }
+    },
+
+    edit: async (req,res) => { 
+        try {
+            const idToUpdate = +req.params.id;
+            let product = await db.Product.findByPk(idToUpdate);    
+            
+            if (product) {
+                product = product.toJSON();
+                console.log(product);
+
+                let respuesta = {
+                    meta: {
+                        status: 200,
+                        url: `/api/productos/editar/${idToUpdate}`,
+                    },
+                    data: product
+                }
+                res.status(200).json(respuesta);
+            } else {
+                let respuesta = {
+                    meta: {
+                        status: 404,
+                        url: `/api/productos/editar/${req.params.idToUpdate}`,
+                    },
+                    data: 'Producto no encontrado'
+                }
+                res.status(404).json(respuesta);
+            }
+        } catch (error) {
+            res.json({error: error.message});
+        }
+        
+    },
 
 };
 
